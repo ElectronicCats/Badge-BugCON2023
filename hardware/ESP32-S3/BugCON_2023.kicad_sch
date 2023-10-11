@@ -1547,58 +1547,6 @@
         )
       )
     )
-    (symbol "power:+3.3V" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
-      (property "Reference" "#PWR" (at 0 -3.81 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Value" "+3.3V" (at 0 3.556 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_keywords" "global power" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_description" "Power symbol creates a global label with name \"+3.3V\"" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "+3.3V_0_1"
-        (polyline
-          (pts
-            (xy -0.762 1.27)
-            (xy 0 2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 0)
-            (xy 0 2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 2.54)
-            (xy 0.762 1.27)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-      )
-      (symbol "+3.3V_1_1"
-        (pin power_in line (at 0 0 90) (length 0) hide
-          (name "+3.3V" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
     (symbol "power:+3V3" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
       (property "Reference" "#PWR" (at 0 -3.81 0)
         (effects (font (size 1.27 1.27)) hide)
@@ -2485,66 +2433,6 @@
     (uuid f9db632f-768b-46a5-a6cc-7ac5ba161414)
   )
 
-  (symbol (lib_id "power:+3.3V") (at 231.394 121.666 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 01781b22-0358-4c99-89e4-80e45e44e7a1)
-    (property "Reference" "#PWR039" (at 231.394 125.476 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+3.3V" (at 231.394 117.475 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 231.394 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 231.394 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 80a954bc-4ab9-45f6-88f1-78f597bdaf5e))
-    (instances
-      (project "BugCON_2023"
-        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
-          (reference "#PWR039") (unit 1)
-        )
-      )
-      (project "ekoparty2023"
-        (path "/7698cad5-62ba-4b78-a0b3-4b9e419fd18c"
-          (reference "#PWR029") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:+3.3V") (at 206.883 121.666 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 0b4c614b-bb92-490e-89ea-4762711e88c2)
-    (property "Reference" "#PWR036" (at 206.883 125.476 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+3.3V" (at 206.883 117.475 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 206.883 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 206.883 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 3652eab8-6018-4d7a-9710-e3c35ca99cc4))
-    (instances
-      (project "BugCON_2023"
-        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
-          (reference "#PWR036") (unit 1)
-        )
-      )
-      (project "ekoparty2023"
-        (path "/7698cad5-62ba-4b78-a0b3-4b9e419fd18c"
-          (reference "#PWR028") (unit 1)
-        )
-      )
-    )
-  )
-
   (symbol (lib_id "Device:C_Small") (at 106.426 37.973 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 0df19b61-8bf7-42ca-a8f4-1d40b7d54f96)
@@ -2848,6 +2736,36 @@
     )
   )
 
+  (symbol (lib_id "power:+3V3") (at 206.883 121.666 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid 2ae864b7-c2e5-4727-afab-053f4fa9093c)
+    (property "Reference" "#PWR029" (at 206.883 125.476 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+3V3" (at 207.264 117.2718 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 206.883 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 206.883 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 59b3b1bc-61cc-477b-842f-ee8a282c19d1))
+    (instances
+      (project "BugCON_2023"
+        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
+          (reference "#PWR029") (unit 1)
+        )
+      )
+      (project "minino"
+        (path "/aed8b10b-62ba-47cf-bd6c-c207f8432caa"
+          (reference "#PWR022") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "power:GND") (at 89.027 112.395 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 2c0b8f11-00f8-4de9-8039-cec6d0a4b3f5)
@@ -2898,6 +2816,36 @@
       (project "BugCON_2023"
         (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
           (reference "J5") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:+3V3") (at 255.397 121.666 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid 310f1410-b5fb-4a0d-b666-aaa3a043941e)
+    (property "Reference" "#PWR036" (at 255.397 125.476 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+3V3" (at 255.778 117.2718 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 255.397 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 255.397 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid ffe6aec6-750a-4a94-937f-4f290c151c71))
+    (instances
+      (project "BugCON_2023"
+        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
+          (reference "#PWR036") (unit 1)
+        )
+      )
+      (project "minino"
+        (path "/aed8b10b-62ba-47cf-bd6c-c207f8432caa"
+          (reference "#PWR022") (unit 1)
         )
       )
     )
@@ -3163,6 +3111,36 @@
       (project "minino"
         (path "/aed8b10b-62ba-47cf-bd6c-c207f8432caa"
           (reference "#PWR012") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:+3V3") (at 181.991 121.666 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid 449eefa0-c020-4794-a04f-a01f1ef8d1b6)
+    (property "Reference" "#PWR032" (at 181.991 125.476 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+3V3" (at 182.372 117.2718 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 181.991 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 181.991 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 6a74136d-0fa7-4ec2-9831-65491a61130d))
+    (instances
+      (project "BugCON_2023"
+        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
+          (reference "#PWR032") (unit 1)
+        )
+      )
+      (project "minino"
+        (path "/aed8b10b-62ba-47cf-bd6c-c207f8432caa"
+          (reference "#PWR022") (unit 1)
         )
       )
     )
@@ -4125,36 +4103,6 @@
     )
   )
 
-  (symbol (lib_id "power:+3.3V") (at 181.991 121.666 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 9655bcee-5a1f-41d4-aa4d-ef316f6acadb)
-    (property "Reference" "#PWR033" (at 181.991 125.476 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+3.3V" (at 181.991 117.475 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 181.991 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 181.991 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid f6aa4320-6b01-4393-bac3-ec4415683f25))
-    (instances
-      (project "BugCON_2023"
-        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
-          (reference "#PWR033") (unit 1)
-        )
-      )
-      (project "ekoparty2023"
-        (path "/7698cad5-62ba-4b78-a0b3-4b9e419fd18c"
-          (reference "#PWR027") (unit 1)
-        )
-      )
-    )
-  )
-
   (symbol (lib_id "Connector_Generic:Conn_01x02") (at 38.1 85.598 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 966b9749-33df-4644-9192-a549ce83ba83)
@@ -4212,36 +4160,6 @@
       (project "ekoparty2023"
         (path "/7698cad5-62ba-4b78-a0b3-4b9e419fd18c"
           (reference "#PWR019") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:+3.3V") (at 255.397 121.666 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid a4ec6405-4238-4e97-9e42-3d3ef84be46b)
-    (property "Reference" "#PWR029" (at 255.397 125.476 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "+3.3V" (at 255.397 117.475 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 255.397 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 255.397 121.666 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid fc52ed20-e22f-4c2a-ab51-037c7a720015))
-    (instances
-      (project "BugCON_2023"
-        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
-          (reference "#PWR029") (unit 1)
-        )
-      )
-      (project "ekoparty2023"
-        (path "/7698cad5-62ba-4b78-a0b3-4b9e419fd18c"
-          (reference "#PWR029") (unit 1)
         )
       )
     )
@@ -4435,6 +4353,36 @@
       (project "ekoparty2023"
         (path "/7698cad5-62ba-4b78-a0b3-4b9e419fd18c"
           (reference "D2") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:+3V3") (at 231.394 121.666 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid bfda3bc0-8292-438b-af00-a3804df1c7a8)
+    (property "Reference" "#PWR033" (at 231.394 125.476 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+3V3" (at 231.775 117.2718 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 231.394 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 231.394 121.666 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 1927802b-ba01-4cd4-8ab8-4d5df2e1b643))
+    (instances
+      (project "BugCON_2023"
+        (path "/3bd1d1f8-54bc-46fd-8763-4ee40cf8320e"
+          (reference "#PWR033") (unit 1)
+        )
+      )
+      (project "minino"
+        (path "/aed8b10b-62ba-47cf-bd6c-c207f8432caa"
+          (reference "#PWR022") (unit 1)
         )
       )
     )
