@@ -4591,7 +4591,7 @@
     (property "Value" "USB_C_Plug_USB2.0" (at 29.6418 16.8656 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Connector_USB:USB_C_Receptacle_G-Switch_GT-USB-7010ASV" (at 30.734 36.576 0)
+    (property "Footprint" "FootprintsB:C393939" (at 30.734 36.576 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2108132030_Korean-Hroparts-Elec-TYPE-C-31-M-31_C2760486.pdf" (at 30.734 36.576 0)
