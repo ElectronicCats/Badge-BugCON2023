@@ -26,3 +26,5 @@ fp-info-cache
 *.csv
 
 hardware/Template-KiCAD-Project-CI-backups/
+
+hardware/ESP32-S3/BugCON_2023-backups/
