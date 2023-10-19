@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "BugCON2023_samd11")(type "KiCad")(uri "${KIPRJMOD}/Libraries/BugCON2023_samd11.pretty")(options "")(descr ""))
+)
