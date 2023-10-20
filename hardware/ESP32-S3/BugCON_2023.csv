@@ -3,7 +3,7 @@
 "2","C2, C3, C4, C5","4","10uF","Capacitor_SMD:C_0603_1608Metric","","C85713","CL10A106MP8NNNC","LCSC"
 "3","C6, C7, C8, C9","4","0.1uF","Capacitor_SMD:C_0603_1608Metric","","C42998","0603F104M500NT","LCSC"
 "4","D1","1","MBR120","Diode_SMD:D_SOD-123F","","C130880","MBR120LSF","LCSC"
-"5","D2, D3, D4, D6","4","WS2812B_Mini_X2","FootprintsB:LED-SMD_4P-L3.5-W3.5-TL_WS2812B-1","","C4154873","WS2812B-Mini-x2","LCSC"
+"5","D2, D3, D5, D6","4","WS2812B","FootprintsB:LED-SMD_4P-L3.5-W3.5-TL_WS2812B","","C527089","WS2812B-Mini","LCSC"
 "6","F1","1","0.5A","Fuse:Fuse_0805_2012Metric","","-","MFU0805FF00500P100","MOUSER"
 "7","J1","1","Conn_01x04_Pin","Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical","","","Display OLED 128×32 0.91 I2C SSD1306 Blanco / Azul","Unit Electronics"
 "8","J3","1","Conn_01x02","FootprintsB:BAT_12BH331P-GR","","","12BH331P-GR","MOUSER"
