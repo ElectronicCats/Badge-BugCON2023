@@ -18,12 +18,15 @@
  included in any redistribution.
  **************************************************************************/
 #include <Adafruit_GFX.h>
+#include <Adafruit_SH110X.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <Wire.h>
 
+#include "hardware.h"
+
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
-#define SCREEN_HEIGHT 32  // OLED display height, in pixels
+#define SCREEN_HEIGHT 64  // OLED display height, in pixels 
 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 // The pins for I2C are defined by the Wire-library.
@@ -32,7 +35,12 @@
 // On an arduino LEONARDO:   2(SDA),  3(SCL), ...
 #define OLED_RESET -1        // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C  ///< See datasheet for Address; 0x3D for 128x64, 0x3C ,for 128x32
+
+#if defined(ESP32_DEVKIT) || defined(RP2040)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#else // ESP32_S3
+Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#endif
 
 #define NUMFLAKES 10  // Number of snowflakes in the animation example
 
@@ -62,17 +70,31 @@ void setup() {
   // Wait for serial monitor to open
   while (!Serial)
     ;
+  for (uint8_t i = 0; i < 10; i++) {
+    Serial.println("Hi");
+    delay(200);
+  }
 
-	Serial.println("Board name: " + String(BOARD_NAME));
-	Serial.println("SDA pin: " + String(PIN_WIRE_SDA));
-	Serial.println("SCL pin: " + String(PIN_WIRE_SCL));
+Serial.println("Board name: " + String(BOARD_NAME));
 
-    // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+#if defined(ESP32_DEVKIT) || defined(RP2040)
+  Serial.println("SSD1306 allocation");
+  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
     for (;;)
       ;  // Don't proceed, loop forever
   }
+#endif
+
+#if defined(ESP32_S3)
+  Serial.println("SH110X allocation");
+  if (!display.begin(SCREEN_ADDRESS)) {
+    Serial.println(F("SH110X allocation failed"));
+    for (;;)
+      ;  // Don't proceed, loop forever
+  }
+#endif
 
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
@@ -115,8 +137,6 @@ void setup() {
   testdrawchar();  // Draw characters of the default font
 
   testdrawstyles();  // Draw 'stylized' characters
-
-  testscrolltext();  // Draw scrolling text
 
   testdrawbitmap();  // Draw a small bitmap image
 
@@ -340,33 +360,6 @@ void testdrawstyles(void) {
 
   display.display();
   delay(2000);
-}
-
-void testscrolltext(void) {
-  display.clearDisplay();
-
-  display.setTextSize(2);  // Draw 2X-scale text
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(10, 0);
-  display.println(F("scroll"));
-  display.display();  // Show initial text
-  delay(100);
-
-  // Scroll in various directions, pausing in-between:
-  display.startscrollright(0x00, 0x0F);
-  delay(2000);
-  display.stopscroll();
-  delay(1000);
-  display.startscrollleft(0x00, 0x0F);
-  delay(2000);
-  display.stopscroll();
-  delay(1000);
-  display.startscrolldiagright(0x00, 0x07);
-  delay(2000);
-  display.startscrolldiagleft(0x00, 0x07);
-  delay(2000);
-  display.stopscroll();
-  delay(1000);
 }
 
 void testdrawbitmap(void) {
