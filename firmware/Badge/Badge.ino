@@ -24,14 +24,19 @@
 #include <Wire.h>
 #include <ezButton.h>
 
+#if defined(ESP32) || defined(ESP32_S3)
+#include "ezTouch.h"
+#endif
+
 #include "hardware.h"
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
 
 #define BUTTON_LEFT 27  // GPIO27
-// #define BUTTON_RIGHT 25  // GPIO25
 #define BUTTON_RIGHT 26  // GPIO26
+#define TOUCH_LEFT 14  // GPIO14
+#define TOUCH_RIGHT 12  // GPIO12
 #define DEBOUNCE_TIME_MS 50
  
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
@@ -67,8 +72,13 @@ static const unsigned char PROGMEM logo_bmp[] =
      0b01110000, 0b01110000,
      0b00000000, 0b00110000};
 
+#ifdef RP2040
 ezButton buttonLeft(BUTTON_LEFT);
 ezButton buttonRight(BUTTON_RIGHT);
+#else
+ezTouch buttonLeft(TOUCH_LEFT);
+ezTouch buttonRight(TOUCH_RIGHT);
+#endif
 
 #ifdef RP2040
 UART Serial2(8, 9, NC, NC);  // TX, RX, RTS, CTS
@@ -132,7 +142,15 @@ void loop() {
     Serial.println("Right button pressed");
   }
 
-  serialTest();
+  if (buttonLeft.isReleased()) {
+    Serial.println("Left button released");
+  }
+
+  if (buttonRight.isReleased()) {
+    Serial.println("Right button released");
+  }
+
+  // serialTest();
 }
 
 void serialTest() {
