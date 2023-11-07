@@ -28,100 +28,109 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "ezTouch.h"
 
-ezTouch::ezTouch(int pin): ezTouch(pin, INPUT_PULLUP) {};
+ezTouch::ezTouch(int pin) : ezTouch(pin, INPUT_PULLUP){};
 
 ezTouch::ezTouch(int pin, int mode) {
-	btnPin = pin;
-	debounceTime = 0;
-	count = 0;
-	countMode = COUNT_FALLING;
+  btnPin = pin;
+  debounceTime = 0;
+  count = 0;
+  countMode = COUNT_FALLING;
 
-	// pinMode(btnPin, mode);
+  // pinMode(btnPin, mode);
+#if defined(ESP32) || defined(ESP32_S3)
+  previousSteadyState = touchRead(btnPin) < 50;
+#else
+	previousSteadyState = digitalRead(btnPin);
+#endif
+  lastSteadyState = previousSteadyState;
+  lastFlickerableState = previousSteadyState;
 
-	previousSteadyState = touchRead(btnPin) < 50;
-	lastSteadyState = previousSteadyState;
-	lastFlickerableState = previousSteadyState;
-
-	lastDebounceTime = 0;
+  lastDebounceTime = 0;
 }
 
 void ezTouch::setDebounceTime(unsigned long time) {
-	debounceTime = time;
+  debounceTime = time;
 }
 
 int ezTouch::getState(void) {
-	return lastSteadyState;
+  return lastSteadyState;
 }
 
 int ezTouch::getStateRaw(void) {
-	return touchRead(btnPin) < 50;
+#if defined(ESP32) || defined(ESP32_S3)
+  return touchRead(btnPin) < 50;
+#else
+  return digitalRead(btnPin);
+#endif
 }
 
 bool ezTouch::isPressed(void) {
-	if(previousSteadyState == LOW && lastSteadyState == HIGH)
-		return true;
-	else
-		return false;
+  if (previousSteadyState == LOW && lastSteadyState == HIGH)
+    return true;
+  else
+    return false;
 }
 
 bool ezTouch::isReleased(void) {
-	if(previousSteadyState == HIGH && lastSteadyState == LOW)
-		return true;
-	else
-		return false;
+  if (previousSteadyState == HIGH && lastSteadyState == LOW)
+    return true;
+  else
+    return false;
 }
 
 void ezTouch::setCountMode(int mode) {
-	countMode = mode;
+  countMode = mode;
 }
 
 unsigned long ezTouch::getCount(void) {
-	return count;
+  return count;
 }
 
 void ezTouch::resetCount(void) {
-	count = 0;
+  count = 0;
 }
 
 void ezTouch::loop(void) {
-	// read the state of the switch/button:
-	int currentState = touchRead(btnPin) < 50;
-	unsigned long currentTime = millis();
+  // read the state of the switch/button:
+#if defined(ESP32) || defined(ESP32_S3)
+  int currentState = touchRead(btnPin) < 50;
+#else
+	int currentState = digitalRead(btnPin);
+#endif
+  unsigned long currentTime = millis();
 
-	// check to see if you just pressed the button
-	// (i.e. the input went from LOW to HIGH), and you've waited long enough
-	// since the last press to ignore any noise:
+  // check to see if you just pressed the button
+  // (i.e. the input went from LOW to HIGH), and you've waited long enough
+  // since the last press to ignore any noise:
 
-	// If the switch/button changed, due to noise or pressing:
-	if (currentState != lastFlickerableState) {
-		// reset the debouncing timer
-		lastDebounceTime = currentTime;
-		// save the the last flickerable state
-		lastFlickerableState = currentState;
-	}
+  // If the switch/button changed, due to noise or pressing:
+  if (currentState != lastFlickerableState) {
+    // reset the debouncing timer
+    lastDebounceTime = currentTime;
+    // save the the last flickerable state
+    lastFlickerableState = currentState;
+  }
 
-	if ((currentTime - lastDebounceTime) >= debounceTime) {
-		// whatever the reading is at, it's been there for longer than the debounce
-		// delay, so take it as the actual current state:
+  if ((currentTime - lastDebounceTime) >= debounceTime) {
+    // whatever the reading is at, it's been there for longer than the debounce
+    // delay, so take it as the actual current state:
 
-		// save the the steady state
-		previousSteadyState = lastSteadyState;
-		lastSteadyState = currentState;
-	}
+    // save the the steady state
+    previousSteadyState = lastSteadyState;
+    lastSteadyState = currentState;
+  }
 
-	if(previousSteadyState != lastSteadyState){
-		if(countMode == COUNT_BOTH)
-			count++;
-		else if(countMode == COUNT_FALLING){
-			if(previousSteadyState == HIGH && lastSteadyState == LOW)
-				count++;
-		}
-		else if(countMode == COUNT_RISING){
-			if(previousSteadyState == LOW && lastSteadyState == HIGH)
-				count++;
-		}
-	}
+  if (previousSteadyState != lastSteadyState) {
+    if (countMode == COUNT_BOTH)
+      count++;
+    else if (countMode == COUNT_FALLING) {
+      if (previousSteadyState == HIGH && lastSteadyState == LOW)
+        count++;
+    } else if (countMode == COUNT_RISING) {
+      if (previousSteadyState == LOW && lastSteadyState == HIGH)
+        count++;
+    }
+  }
 }

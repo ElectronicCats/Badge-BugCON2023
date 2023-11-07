@@ -1,56 +1,19 @@
-/**************************************************************************
- This is an example for our Monochrome OLEDs based on SSD1306 drivers
-
- Pick one up today in the adafruit shop!
- ------> http://www.adafruit.com/category/63_98
-
- This example is for a 128x64 pixel display using I2C to communicate
- 3 pins are required to interface (two I2C and one reset).
-
- Adafruit invests time and resources providing this open
- source code, please support Adafruit and open-source
- hardware by purchasing products from Adafruit!
-
- Written by Limor Fried/Ladyada for Adafruit Industries,
- with contributions from the open source community.
- BSD license, check license.txt for more information
- All text above, and the splash screen below must be
- included in any redistribution.
- **************************************************************************/
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <ezButton.h>
 
-#if defined(ESP32) || defined(ESP32_S3)
-#include "ezTouch.h"
-#endif
-
+#include "buttons.h"
 #include "hardware.h"
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
 
-#define BUTTON_LEFT 27  // GPIO27
-#define BUTTON_RIGHT 26  // GPIO26
-#define TOUCH_LEFT 14  // GPIO14
-#define TOUCH_RIGHT 12  // GPIO12
-#define DEBOUNCE_TIME_MS 50
- 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 // The pins for I2C are defined by the Wire-library.
 #define OLED_RESET -1        // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C  ///< See datasheet for Address; 0x3D for 128x64, 0x3C ,for 128x32
-
-#if defined(ESP32_DEVKIT) || defined(RP2040)
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-#else  // ESP32_S3
-Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-#endif
-
-#define NUMFLAKES 10  // Number of snowflakes in the animation example
 
 #define LOGO_HEIGHT 16
 #define LOGO_WIDTH 16
@@ -72,12 +35,10 @@ static const unsigned char PROGMEM logo_bmp[] =
      0b01110000, 0b01110000,
      0b00000000, 0b00110000};
 
-#ifdef RP2040
-ezButton buttonLeft(BUTTON_LEFT);
-ezButton buttonRight(BUTTON_RIGHT);
-#else
-ezTouch buttonLeft(TOUCH_LEFT);
-ezTouch buttonRight(TOUCH_RIGHT);
+#if defined(ESP32_DEVKIT) || defined(RP2040)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#else  // ESP32_S3
+Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #endif
 
 #ifdef RP2040
@@ -95,10 +56,6 @@ void setup() {
   // Wait for serial monitor to open
   while (!Serial)
     ;
-  for (uint8_t i = 0; i < 10; i++) {
-    Serial.println("Hi");
-    delay(200);
-  }
 
   Serial.println("Board name: " + String(BOARD_NAME));
 
