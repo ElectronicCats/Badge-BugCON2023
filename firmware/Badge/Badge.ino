@@ -1,4 +1,5 @@
 #include <Adafruit_GFX.h>
+#include <Adafruit_NeoPixel.h>
 #include <Adafruit_SH110X.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
@@ -6,6 +7,9 @@
 
 #include "buttons.h"
 #include "hardware.h"
+
+#define NEOPIXELS_PIN 19
+#define NUMPIXELS 4
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
@@ -40,6 +44,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #else  // ESP32_S3
 Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #endif
+
+Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800);
 
 #ifdef RP2040
 UART Serial2(8, 9, NC, NC);  // TX, RX, RTS, CTS
@@ -85,6 +91,7 @@ void setup() {
   // the library initializes this with an Adafruit splash screen.
   display.display();
   delay(2000);  // Pause for 2 seconds
+  pixels.begin();
 }
 
 void loop() {
@@ -108,6 +115,21 @@ void loop() {
   }
 
   // serialTest();
+
+  pixels.clear();  // Set all pixel colors to 'off'
+
+  // The first NeoPixel in a strand is #0, second is 1, all the way up
+  // to the count of pixels minus one.
+  for (int i = 0; i < NUMPIXELS; i++) {  // For each pixel...
+
+    // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255
+    // Here we're using a moderately bright green color:
+    pixels.setPixelColor(i, pixels.Color(0, 150, 0));
+
+    pixels.show();  // Send the updated pixel colors to the hardware.
+
+    delay(500);  // Pause before next pass through loop
+  }
 }
 
 void serialTest() {
