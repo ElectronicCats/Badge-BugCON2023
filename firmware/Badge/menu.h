@@ -7,8 +7,8 @@
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <Wire.h>
-
 #include "hardware.h"
+#include "Debug.h"
 #include <ezButton.h>
 
 #if defined(ESP32) || defined(ESP32_S3)
@@ -52,6 +52,7 @@ static const unsigned char PROGMEM logo_bmp[] =
 class Menu {
  private:
   Adafruit_SSD1306 display;
+	Debug debug;
 
  public:
   Menu();

@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "Menu.h"
 
 #ifdef RP2040
 ezButton buttonLeft(BUTTON_LEFT);
@@ -12,12 +12,16 @@ Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET) {
 }
 
 void Menu::begin() {
+  debug.begin(9600);
+  debug.waitForSerialConnection();
+  debug.println("Board name: " + String(BOARD_NAME));
+  
   buttonLeft.setDebounceTime(DEBOUNCE_TIME_MS);
   buttonRight.setDebounceTime(DEBOUNCE_TIME_MS);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
+    debug.println(F("SSD1306 allocation failed"));
     for (;;)
       ;  // Don't proceed, loop forever
   }
@@ -33,18 +37,18 @@ void Menu::loop() {
   buttonRight.loop();
 
   if (buttonLeft.isPressed()) {
-    Serial.println("Left button pressed");
+    debug.println("Left button pressed");
   }
 
   if (buttonRight.isPressed()) {
-    Serial.println("Right button pressed");
+    debug.println("Right button pressed");
   }
 
   if (buttonLeft.isReleased()) {
-    Serial.println("Left button released");
+    debug.println("Left button released");
   }
 
   if (buttonRight.isReleased()) {
-    Serial.println("Right button released");
+    debug.println("Right button released");
   }
 }
