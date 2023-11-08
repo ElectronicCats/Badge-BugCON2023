@@ -1,5 +1,4 @@
 #include "menu.h"
-#include "buttons.h"
 
 #define NEOPIXELS_PIN 19
 #define NUMPIXELS 4
@@ -17,8 +16,6 @@ void setup() {
 #ifdef RP2040
   Serial2.begin(9600);
 #endif
-  buttonLeft.setDebounceTime(DEBOUNCE_TIME_MS);
-  buttonRight.setDebounceTime(DEBOUNCE_TIME_MS);
 
   // Wait for serial monitor to open
   while (!Serial)
@@ -36,25 +33,7 @@ void setup() {
 }
 
 void loop() {
-  buttonLeft.loop();
-  buttonRight.loop();
-
-  if (buttonLeft.isPressed()) {
-    Serial.println("Left button pressed");
-  }
-
-  if (buttonRight.isPressed()) {
-    Serial.println("Right button pressed");
-  }
-
-  if (buttonLeft.isReleased()) {
-    Serial.println("Left button released");
-  }
-
-  if (buttonRight.isReleased()) {
-    Serial.println("Right button released");
-  }
-
+  menu.loop();
   // serialTest();
 
   pixels.clear();  // Set all pixel colors to 'off'

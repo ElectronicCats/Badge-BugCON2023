@@ -1,7 +1,7 @@
 BOARD ?= rp2040 # rp2040, esp32, esp32s3
 
 BOARD_TAG_1 = arduino:mbed_rp2040:pico
-MONITOR_PORT_1 = /dev/cu.usbmodem11101
+MONITOR_PORT_1 = /dev/cu.usbmodem1101
 BOARD_TAG_2 = esp32:esp32:esp32wrover
 MONITOR_PORT_2 = /dev/cu.wchusbserial550D0100521
 BOARD_TAG_3 = esp32:esp32:esp32s3:CDCOnBoot=cdc

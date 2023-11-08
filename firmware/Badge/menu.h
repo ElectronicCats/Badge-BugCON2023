@@ -9,6 +9,17 @@
 #include <Wire.h>
 
 #include "hardware.h"
+#include <ezButton.h>
+
+#if defined(ESP32) || defined(ESP32_S3)
+#include "ezTouch.h"
+#endif
+
+#define BUTTON_LEFT 27   // GPIO27
+#define BUTTON_RIGHT 26  // GPIO26
+#define TOUCH_LEFT 14    // GPIO14
+#define TOUCH_RIGHT 12   // GPIO12
+#define DEBOUNCE_TIME_MS 50
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
@@ -45,6 +56,7 @@ class Menu {
  public:
   Menu();
 	void begin();
+	void loop();
 };
 
 #endif
