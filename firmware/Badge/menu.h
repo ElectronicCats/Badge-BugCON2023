@@ -7,11 +7,12 @@
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <Wire.h>
-#include "hardware.h"
-#include "Debug.h"
 #include <ezButton.h>
 
-#if defined(ESP32) || defined(ESP32_S3)
+#include "Debug.h"
+#include "hardware.h"
+
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
 #include "ezTouch.h"
 #endif
 
@@ -28,6 +29,15 @@
 // The pins for I2C are defined by the Wire-library.
 #define OLED_RESET -1        // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C  ///< See datasheet for Address; 0x3D for 128x64, 0x3C ,for 128x32
+
+#define WHITE 1
+#define BLACK 0
+#define VERTICAL_MENU 0
+#define HORIZONTAL_MENU 1
+
+enum DisplayLayer {
+  LAYER_MAIN = 0,
+};
 
 #define LOGO_HEIGHT 16
 #define LOGO_WIDTH 16
@@ -52,12 +62,20 @@ static const unsigned char PROGMEM logo_bmp[] =
 class Menu {
  private:
   Adafruit_SSD1306 display;
-	Debug debug;
+  Debug debug;
+  uint8_t selectedOption;
+  uint8_t previousLayer;
+  uint8_t currentLayer;
+  uint8_t optionsSize;
+  uint8_t bannerSize;
+  uint8_t menuOrientation;
+  void showVMenu();
+  char **updateVMenuOptions();
 
  public:
   Menu();
-	void begin();
-	void loop();
+  void begin();
+  void loop();
 };
 
 #endif
