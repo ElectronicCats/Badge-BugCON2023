@@ -33,3 +33,6 @@ hardware/SAMD11/BugCON2023_samd11-backups/
 
 # macOS finder files
 **/.DS_Store
+
+# Firmware binaries
+firmware/**/build/

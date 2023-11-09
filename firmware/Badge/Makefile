@@ -36,7 +36,7 @@ help:
 	@echo "  make all BOARD=esp32s3"
 
 compile:
-	$(ARDUINO_CLI_PATH) compile --fqbn $(BOARD_TAG)
+	$(ARDUINO_CLI_PATH) compile --fqbn $(BOARD_TAG) --export-binaries
 
 upload:
 	@$(ARDUINO_CLI_PATH) upload -p $(MONITOR_PORT) --fqbn $(BOARD_TAG) --verbose
