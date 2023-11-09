@@ -17,6 +17,7 @@
 #endif
 
 #define DEBOUNCE_TIME_MS 70
+#define LONG_CLICK_TIME_MS 500
 #define BUTTON_LEFT 27   // GPIO27
 #define BUTTON_RIGHT 26  // GPIO26 -> For development in Raspberry Pi Pico
 // #define BUTTON_RIGHT 25  // GPIO25 -> For production in BugCON badge
@@ -70,8 +71,17 @@
 #define JUMP_PIXEL 22  // Number of pixel dino will jump
 // #define JUMP_PIXEL 11 
 
-enum DisplayLayer {
-  LAYER_MAIN = 0,
+enum MenuLayer {
+  LAYER_MAIN_MENU = 0,
+};
+
+enum MainMenuOptions {
+  MAIN_MENU_DINO = 0,
+  MAIN_MENU_TEST,
+  MAIN_MENU_TEST1,
+  MAIN_MENU_TEST2,
+  MAIN_MENU_TEST3,
+  MAIN_MENU_TEST4,
 };
 
 #define LOGO_HEIGHT 16
@@ -106,6 +116,7 @@ class Menu {
   uint8_t menuOrientation;
   void showVMenu();
   char **updateVMenuOptions();
+  void handleSelection();
   // Delete later
   void gameSetup();
   void introMessage();

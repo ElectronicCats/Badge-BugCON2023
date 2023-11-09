@@ -33,15 +33,64 @@ void Menu::begin() {
   display.display();
   delay(2000);  // Pause for 2 seconds
   showVMenu();
-  gameSetup();
 }
 
 void Menu::loop() {
   buttonLeft.loop();
   buttonRight.loop();
+  static unsigned long buttonLeftPressedTime = 0;
+  static unsigned long buttonRightPressedTime = 0;
+  static bool buttonLeftPressed = false;
+  static bool buttonRightPressed = false;
+  static bool leftLongClickDetected = false;
+  static bool rightLongClickDetected = false;
+
+  // Print debug info every 1 second
+  static unsigned long lastDebugPrint = 0;
+  if (millis() - lastDebugPrint > 1000) {
+    lastDebugPrint = millis();
+    // debug.println("Left Button long click detected: " + String(leftLongClickDetected));
+    // debug.println("Right Button long click detected: " + String(rightLongClickDetected));
+    // debug.println("Left Button time: " + String(buttonLeftPressedTime));
+    // debug.println("Right Button time: " + String(buttonRightPressedTime));
+    // debug.println("Left button click elapsed time: " + String((millis() - buttonLeftPressedTime)/1000));
+    // debug.println("Right button click elapsed time: " + String((millis() - buttonRightPressedTime)/1000));
+    // debug.println("");
+  }
 
   if (buttonLeft.isPressed()) {
     debug.println("Left button pressed");
+    buttonLeftPressedTime = millis();
+    buttonLeftPressed = true;
+  }
+
+  if (buttonRight.isPressed()) {
+    debug.println("Right button pressed");
+    buttonRightPressedTime = millis();
+    buttonRightPressed = true;
+  }
+
+  // Verify left long click
+  if (buttonLeftPressed && !leftLongClickDetected && (millis() - buttonLeftPressedTime > LONG_CLICK_TIME_MS)) {
+    debug.println("Left button long pressed");
+    leftLongClickDetected = true;
+  }
+
+  // Verify right long click
+  if (buttonRightPressed && !rightLongClickDetected && (millis() - buttonRightPressedTime > LONG_CLICK_TIME_MS)) {
+    debug.println("Right button long pressed");
+    rightLongClickDetected = true;
+
+    handleSelection();
+  }
+
+  if (buttonLeft.isReleased()) {
+    debug.println("Left button released");
+    buttonLeftPressed = false;
+    if (leftLongClickDetected) {
+      leftLongClickDetected = false;
+      return;
+    }
     selectedOption--;
 
     if (selectedOption == 255)  // Underflow
@@ -50,22 +99,19 @@ void Menu::loop() {
     showVMenu();
   }
 
-  if (buttonRight.isPressed()) {
-    debug.println("Right button pressed");
+  if (buttonRight.isReleased()) {
+    debug.println("Right button released");
+    buttonRightPressed = false;
+    if (rightLongClickDetected) {
+      rightLongClickDetected = false;
+      return;
+    }
     selectedOption++;
 
     if (selectedOption > optionsSize - 1)
       selectedOption = optionsSize - 1;
 
     showVMenu();
-  }
-
-  if (buttonLeft.isReleased()) {
-    debug.println("Left button released");
-  }
-
-  if (buttonRight.isReleased()) {
-    debug.println("Right button released");
   }
 }
 
@@ -100,7 +146,7 @@ char **Menu::updateVMenuOptions() {
   char **options;
 
   switch (currentLayer) {
-    case LAYER_MAIN:
+    case LAYER_MAIN_MENU:
       // break;
     default:
       options = mainOptions;
@@ -109,6 +155,32 @@ char **Menu::updateVMenuOptions() {
   }
 
   return options;
+}
+
+void Menu::handleSelection() {
+  switch (currentLayer) {
+    case LAYER_MAIN_MENU:
+      switch (selectedOption) {
+        case MAIN_MENU_DINO:
+          gameSetup();
+          break;
+        case MAIN_MENU_TEST:
+          break;
+        case MAIN_MENU_TEST1:
+          break;
+        case MAIN_MENU_TEST2:
+          break;
+        case MAIN_MENU_TEST3:
+          break;
+        case MAIN_MENU_TEST4:
+          break;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
 }
 
 /**
