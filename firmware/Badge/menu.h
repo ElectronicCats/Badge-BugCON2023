@@ -71,6 +71,15 @@ class Menu {
   uint8_t menuOrientation;
   void showVMenu();
   char **updateVMenuOptions();
+  // Delete later
+  void gameSetup();
+  void introMessage();
+  void moveDino(int16_t *y, int type = 0);
+  void moveTree(int16_t *x, int type = 0);
+  void gameOver(int score = 0);
+  void displayScore(int score);
+  void play();
+  void renderScene(int16_t i = 0);
 
  public:
   Menu();
