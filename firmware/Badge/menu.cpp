@@ -56,7 +56,7 @@ void Menu::loop() {
 
     if (selectedOption > optionsSize - 1)
       selectedOption = optionsSize - 1;
-    
+
     showVMenu();
   }
 
@@ -152,9 +152,15 @@ void Menu::gameSetup() {
   // Run game in loop
   while (1) {
     buttonRight.loop();
+    buttonLeft.loop();
 
     if (buttonRight.isPressed()) {
-      play();
+      bool continuePlaying = play();
+      if (!continuePlaying) break;
+    }
+
+    if (buttonLeft.isPressed()) {
+      break;
     }
   }
 }
@@ -217,7 +223,8 @@ void Menu::displayScore(int score) {
 }
 
 // Main play function
-void Menu::play() {
+bool Menu::play() {
+  bool continuePlaying = true;
   int16_t tree_x = 127;
   int16_t tree1_x = 195;
   int tree_type = random(0, 2);
@@ -232,20 +239,16 @@ void Menu::play() {
   for (;;) {
     display.clearDisplay();
     buttonRight.loop();
+    buttonLeft.loop();
 
-    // if (Serial.available()) {
-    //   input_command = Serial.parseInt();
+    if (buttonLeft.isPressed()) {
+      continuePlaying = false;
+    }
 
-    //   if (input_command == 5) {
-    //     Serial.println("Jump");
-    //     if (jump == 0) jump = 1;
-    //   }
-    // }
-
-     if (buttonRight.isPressed()) {
+    if (buttonRight.isPressed()) {
       Serial.println("Jump");
       if (jump == 0) jump = 1;
-     }
+    }
 
     if (jump == 1) {
       dino_y--;
@@ -301,6 +304,8 @@ void Menu::play() {
 
   Serial.println("Game Over");
   gameOver(score);
+
+  return continuePlaying;
 }
 
 void Menu::renderScene(int16_t i) {

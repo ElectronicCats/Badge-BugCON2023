@@ -16,11 +16,18 @@
 #include "ezTouch.h"
 #endif
 
+#define DEBOUNCE_TIME_MS 70
 #define BUTTON_LEFT 27   // GPIO27
-#define BUTTON_RIGHT 26  // GPIO26
+#define BUTTON_RIGHT 26  // GPIO26 -> For development in Raspberry Pi Pico
+// #define BUTTON_RIGHT 25  // GPIO25 -> For production in BugCON badge
+
+#if defined(ESP32_DEVKIT)
 #define TOUCH_LEFT 14    // GPIO14
 #define TOUCH_RIGHT 12   // GPIO12
-#define DEBOUNCE_TIME_MS 50
+#else  // ESP32 S3
+#define TOUCH_LEFT 18    // GPIO18
+#define TOUCH_RIGHT 7   // GPIO7
+#endif
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
@@ -106,7 +113,7 @@ class Menu {
   void moveTree(int16_t *x, int type = 0);
   void gameOver(int score = 0);
   void displayScore(int score);
-  void play();
+  bool play();
   void renderScene(int16_t i = 0);
 
  public:

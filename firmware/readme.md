@@ -4,7 +4,7 @@ Link: https://github.com/ElectronicCats/Badge-BugCON2023
 
 Author(s): Francisco Torres
 
-Last updated: 2023/01/03
+Last updated: 2023/11/09
 
 ## Developer guide
 
@@ -45,6 +45,25 @@ You can keep the original pins commented out, and add the following lines:
 // static const uint8_t SCL = 9;
 static const uint8_t SDA = 3;
 static const uint8_t SCL = 4;
+```
+
+### Production
+
+In `Menu.h` change the following lines:
+
+```cpp
+// #define BUTTON_RIGHT 26  // GPIO26 -> For development in Raspberry Pi Pico
+#define BUTTON_RIGHT 25  // GPIO25 -> For production in BugCON badge
+```
+
+Generate binaries for each board:
+
+```bash
+make compile BOARD=rp2040
+```
+
+```bash
+make compile BOARD=esp32s3
 ```
  
 ## Maintainer
