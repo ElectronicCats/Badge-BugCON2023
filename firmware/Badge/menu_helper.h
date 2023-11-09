@@ -4,7 +4,7 @@
 /************************ Main menu ***************************/
 
 char *mainOptions[] = {
-    "1. LEDs",
+    "1. Dino game",
     "2. Ruta",
     "3. Amigos",
     "4. Informacion",

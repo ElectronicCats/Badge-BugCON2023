@@ -1,3 +1,4 @@
+
 #include "Menu.h"
 
 #include "menu_helper.h"
@@ -110,12 +111,6 @@ char **Menu::updateVMenuOptions() {
   return options;
 }
 
-
-
-
-
-
-
 /**
  * Author:    Harsh Mittal
  * Created:   10.07.2021
@@ -124,49 +119,6 @@ char **Menu::updateVMenuOptions() {
  *
  * (c) Copyright by Harsh Mittal.
  **/
-
-// Include
-// #include <Adafruit_GFX.h>
-// #include <Adafruit_SH110X.h>
-// #include <Adafruit_SSD1306.h>
-// #include <Wire.h>
-
-// // Defines
-// #define SCREEN_WIDTH 128  // OLED display width, in pixels
-// #define SCREEN_HEIGHT 32  // OLED display height, in pixels
-
-// #define OLED_RESET 4  // Reset pin # (or -1 if sharing Arduino reset pin)
-// #define SCREEN_ADDRESS 0x3C
-
-#define DINO_WIDTH 25
-#define DINO_HEIGHT 26
-#define DINO_INIT_X 10  // Dino initial spawn location
-// #define DINO_INIT_Y 29 // Dino initial spawn location
-#define DINO_INIT_Y 5  // Nueva ubicación inicial del dinosaurio
-
-// #define BASE_LINE_X 0
-// #define BASE_LINE_Y 54
-// #define BASE_LINE_X1 127
-// #define BASE_LINE_Y1 54
-#define BASE_LINE_X 0
-#define BASE_LINE_Y 21
-#define BASE_LINE_X1 127
-#define BASE_LINE_Y1 21
-
-#define TREE1_WIDTH 11
-#define TREE1_HEIGHT 23
-
-#define TREE2_WIDTH 22
-#define TREE2_HEIGHT 23
-
-// #define TREE_Y 35
-#define TREE_Y 9
-
-#define JUMP_PIXEL 22  // Number of pixel dino will jump
-// #define JUMP_PIXEL 11
-
-// Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-// Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 static const unsigned char PROGMEM dino1[] = {
     // 'dino', 25x26px
@@ -193,32 +145,16 @@ static const unsigned char PROGMEM tree2[] = {
     0x03, 0xe0, 0x1f, 0x03, 0xe0};
 
 void Menu::gameSetup() {
-  // put your setup code here, to run once:
-  // Serial.begin(9600);
-
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  // if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-  //   Serial.println(F("SSD1306 allocation failed"));
-  //   for (;;)
-  //     ;  // Don't proceed, loop forever
-  // }
-
-  //   if (!display.begin(SCREEN_ADDRESS)) {
-  //     Serial.println(F("SH110X allocation failed"));
-  //     for (;;)
-  //       ;  // Don't proceed, loop forever
-  //   }
-
   // Clear the buffer
   display.clearDisplay();
 
   introMessage();
   // Run game in loop
   while (1) {
-    if (Serial.available()) {
-      if (Serial.parseInt() == 1) {
-        play();
-      }
+    buttonRight.loop();
+
+    if (buttonRight.isPressed()) {
+      play();
     }
   }
 }
@@ -238,23 +174,11 @@ void Menu::introMessage() {
 }
 
 // Move dino function
-// void moveDino(int16_t *y, int type=0){
-//   display.drawBitmap(DINO_INIT_X, *y, dino1, DINO_WIDTH, DINO_HEIGHT, SSD1306_WHITE);
-// }
 void Menu::moveDino(int16_t *y, int type) {
   display.drawBitmap(DINO_INIT_X, *y, dino1, DINO_WIDTH, DINO_HEIGHT, SSD1306_WHITE);
 }
 
 // Move tree funcitons
-// void moveTree(int16_t *x, int type=0){
-//   if(type==0){
-//     display.drawBitmap(*x, TREE_Y, tree1, TREE1_WIDTH, TREE1_HEIGHT, SSD1306_WHITE);
-//   }
-//   else if(type==1){
-//     display.drawBitmap(*x, TREE_Y, tree2, TREE2_WIDTH, TREE2_HEIGHT, SSD1306_WHITE);
-//   }
-
-// }
 void Menu::moveTree(int16_t *x, int type) {
   if (type == 0) {
     display.drawBitmap(*x, TREE_Y, tree1, TREE1_WIDTH, TREE1_HEIGHT, SSD1306_WHITE);
@@ -307,15 +231,21 @@ void Menu::play() {
 
   for (;;) {
     display.clearDisplay();
+    buttonRight.loop();
 
-    if (Serial.available()) {
-      input_command = Serial.parseInt();
+    // if (Serial.available()) {
+    //   input_command = Serial.parseInt();
 
-      if (input_command == 5) {
-        Serial.println("Jump");
-        if (jump == 0) jump = 1;
-      }
-    }
+    //   if (input_command == 5) {
+    //     Serial.println("Jump");
+    //     if (jump == 0) jump = 1;
+    //   }
+    // }
+
+     if (buttonRight.isPressed()) {
+      Serial.println("Jump");
+      if (jump == 0) jump = 1;
+     }
 
     if (jump == 1) {
       dino_y--;
