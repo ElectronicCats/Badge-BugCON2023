@@ -40,10 +40,22 @@ void Menu::loop() {
 
   if (buttonLeft.isPressed()) {
     debug.println("Left button pressed");
+    selectedOption--;
+
+    if (selectedOption == 255)  // Underflow
+      selectedOption = 0;
+
+    showVMenu();
   }
 
   if (buttonRight.isPressed()) {
     debug.println("Right button pressed");
+    selectedOption++;
+
+    if (selectedOption > optionsSize - 1)
+      selectedOption = optionsSize - 1;
+    
+    showVMenu();
   }
 
   if (buttonLeft.isReleased()) {
@@ -77,7 +89,7 @@ void Menu::showVMenu() {
       display.println(options[i]);
     }
   }
-  
+
   debug.println("");
   display.display();
 }
