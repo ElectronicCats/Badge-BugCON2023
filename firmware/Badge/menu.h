@@ -3,7 +3,6 @@
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoPixel.h>
-#include <Adafruit_SH110X.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <Wire.h>
@@ -72,19 +71,6 @@
 #define JUMP_PIXEL 22  // Number of pixel dino will jump
 // #define JUMP_PIXEL 11 
 
-enum MenuLayer {
-  LAYER_MAIN_MENU = 0,
-};
-
-enum MainMenuOptions {
-  MAIN_MENU_DINO = 0,
-  MAIN_MENU_TEST,
-  MAIN_MENU_TEST1,
-  MAIN_MENU_TEST2,
-  MAIN_MENU_TEST3,
-  MAIN_MENU_TEST4,
-};
-
 #define LOGO_HEIGHT 16
 #define LOGO_WIDTH 16
 static const unsigned char PROGMEM logo_bmp[] =
@@ -117,10 +103,10 @@ class Menu {
   uint8_t menuOrientation;
   void showVMenu();
   char **updateVMenuOptions();
-  void animateLeftLongPress(bool buttonPressed, bool longClick);
-  void animateRightLongPress(bool buttonPressed, bool longClick);
+  void animateLeftLongPress(bool longClick);
+  void animateRightLongPress(bool longClick);
   void handleSelection();
-  // Delete later
+  // Dino Game
   void gameSetup();
   void introMessage();
   void moveDino(int16_t *y, int type = 0);

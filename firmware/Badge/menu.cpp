@@ -49,7 +49,6 @@ void Menu::loop() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
-    debug.println("Button left state: " + String(buttonLeft.getState()));
     // debug.println("Left Button long click detected: " + String(leftLongClickDetected));
     // debug.println("Right Button long click detected: " + String(rightLongClickDetected));
     // debug.println("Left Button time: " + String(buttonLeftPressedTime));
@@ -59,8 +58,8 @@ void Menu::loop() {
     // debug.println("");
   }
 
-  animateLeftLongPress(buttonLeftPressed, leftLongClickDetected);
-  animateRightLongPress(buttonRightPressed, rightLongClickDetected);
+  animateLeftLongPress(leftLongClickDetected);
+  animateRightLongPress(rightLongClickDetected);
 
   if (buttonLeft.isPressed()) {
     debug.println("Left button pressed");
@@ -132,11 +131,9 @@ void Menu::showVMenu() {
   for (uint8_t i = startIdx; i <= endIdx; i++) {
     debug.println(options[i]);
     if (i == selectedOption) {
-      // ssd1306_drawstr(0, (i - startIdx) * 8, options[i], BLACK);
       display.setTextColor(BLACK, WHITE);
       display.println(options[i]);
     } else {
-      // ssd1306_drawstr(0, (i - startIdx) * 8, options[i], WHITE);
       display.setTextColor(WHITE);
       display.println(options[i]);
     }
@@ -161,7 +158,7 @@ char **Menu::updateVMenuOptions() {
   return options;
 }
 
-void Menu::animateLeftLongPress(bool buttonPressed, bool longClick) {
+void Menu::animateLeftLongPress(bool longClick) {
   static bool animation = false;
   static unsigned long lastTime = 0;
   static unsigned long lastClickTime = 0;
@@ -198,7 +195,7 @@ void Menu::animateLeftLongPress(bool buttonPressed, bool longClick) {
   }
 }
 
-void Menu::animateRightLongPress(bool buttonPressed, bool longClick) {
+void Menu::animateRightLongPress(bool longClick) {
   static bool animation = false;
   static unsigned long lastTime = 0;
   static unsigned long lastClickTime = 0;
@@ -318,13 +315,14 @@ void Menu::gameSetup() {
 void Menu::introMessage() {
   display.setTextSize(1);  // Draw 2X-scale text
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(10, 5);
-  display.println("Dino Game");
+  display.setCursor(30, 5);
+  display.println("Dino Chrome");
 
   display.setTextSize(1);
 
   //   display.setCursor(5,45);
-  display.println("Enter 1 To Play ");
+  display.println("Presiona seleccionar");
+  display.println("     para jugar");
 
   display.display();
 }
@@ -349,17 +347,17 @@ void Menu::gameOver(int score) {
 
   display.setTextSize(1);  // Draw 2X-scale text
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(10, 5);
-  display.println("Game Over");
+  display.setCursor(20, 5);
+  display.println("Juego terminado");
 
   //   display.setTextSize(1);
 
   //   display.setCursor(10,30);
-  display.println("Score: " + String(score));
+  display.println("Puntaje: " + String(score));
   //   display.print(score);
 
   //   display.setCursor(1,45);
-  display.println("Enter 1 To Play Again");
+  display.println("Presiona seleccionar");
 
   display.display();
 }
@@ -368,7 +366,7 @@ void Menu::gameOver(int score) {
 void Menu::displayScore(int score) {
   display.setTextSize(1);
   display.setCursor(64, 10);
-  display.print("Score: ");
+  display.print("Puntaje: ");
   display.print(score);
 }
 
