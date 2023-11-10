@@ -18,6 +18,7 @@
 
 #define DEBOUNCE_TIME_MS 70
 #define LONG_CLICK_TIME_MS 500
+#define BACK_ANIMATION_TIME_MS 150
 #define BUTTON_LEFT 27   // GPIO27
 #define BUTTON_RIGHT 26  // GPIO26 -> For development in Raspberry Pi Pico
 // #define BUTTON_RIGHT 25  // GPIO25 -> For production in BugCON badge
@@ -116,6 +117,8 @@ class Menu {
   uint8_t menuOrientation;
   void showVMenu();
   char **updateVMenuOptions();
+  void animateLeftLongPress(bool buttonPressed, bool longClick);
+  void animateRightLongPress(bool buttonPressed, bool longClick);
   void handleSelection();
   // Delete later
   void gameSetup();

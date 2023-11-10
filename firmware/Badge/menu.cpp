@@ -49,6 +49,7 @@ void Menu::loop() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
+    debug.println("Button left state: " + String(buttonLeft.getState()));
     // debug.println("Left Button long click detected: " + String(leftLongClickDetected));
     // debug.println("Right Button long click detected: " + String(rightLongClickDetected));
     // debug.println("Left Button time: " + String(buttonLeftPressedTime));
@@ -57,6 +58,9 @@ void Menu::loop() {
     // debug.println("Right button click elapsed time: " + String((millis() - buttonRightPressedTime)/1000));
     // debug.println("");
   }
+
+  animateLeftLongPress(buttonLeftPressed, leftLongClickDetected);
+  animateRightLongPress(buttonRightPressed, rightLongClickDetected);
 
   if (buttonLeft.isPressed()) {
     debug.println("Left button pressed");
@@ -155,6 +159,80 @@ char **Menu::updateVMenuOptions() {
   }
 
   return options;
+}
+
+void Menu::animateLeftLongPress(bool buttonPressed, bool longClick) {
+  static bool animation = false;
+  static unsigned long lastTime = 0;
+  static unsigned long lastClickTime = 0;
+  static int16_t i = 0;
+  static uint8_t lastButtonState = buttonLeft.getState();
+
+  if (!buttonLeft.getState() && !longClick) {
+    animation = true;
+    if (lastButtonState != buttonLeft.getState()) {
+      lastButtonState = buttonLeft.getState();
+      lastClickTime = millis();
+    }
+  } else if (longClick || buttonLeft.getState()) {
+    lastButtonState = buttonLeft.getState();
+    animation = false;
+    i = 0;
+    display.drawLine(0, 31, 127, 31, BLACK);
+    display.display();
+  }
+
+  if (!animation) return;
+
+  if (millis() - lastClickTime > BACK_ANIMATION_TIME_MS) {
+    if (millis() - lastTime > 1) {
+      lastTime = millis();
+      i -= 10;
+      if (i < 0) {
+        i = 127;
+        animation = false;
+      }
+      display.drawLine(i, 31, 127, 31, WHITE);
+      display.display();
+    }
+  }
+}
+
+void Menu::animateRightLongPress(bool buttonPressed, bool longClick) {
+  static bool animation = false;
+  static unsigned long lastTime = 0;
+  static unsigned long lastClickTime = 0;
+  static int16_t i = 0;
+  static uint8_t lastButtonState = buttonRight.getState();
+
+  if (!buttonRight.getState() && !longClick) {
+    animation = true;
+    if (lastButtonState != buttonRight.getState()) {
+      lastButtonState = buttonRight.getState();
+      lastClickTime = millis();
+    }
+  } else if (longClick || buttonRight.getState()) {
+    lastButtonState = buttonRight.getState();
+    animation = false;
+    i = 0;
+    display.drawLine(0, 31, 127, 31, BLACK);
+    display.display();
+  }
+
+  if (!animation) return;
+
+  if (millis() - lastClickTime > BACK_ANIMATION_TIME_MS) {
+    if (millis() - lastTime > 1) {
+      lastTime = millis();
+      i += 10;
+      if (i > 127) {
+        i = 0;
+        animation = false;
+      }
+      display.drawLine(0, 31, i, 31, WHITE);
+      display.display();
+    }
+  }
 }
 
 void Menu::handleSelection() {
