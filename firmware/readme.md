@@ -10,6 +10,33 @@ Last updated: 2023/11/09
 
 ## Setup
 
+### Libraries required
+
+Install the following libraries:
+
+- [Adafruit GFX Library](https://www.arduino.cc/reference/en/libraries/adafruit-gfx-library/)
+- [Adafruit BusIO](https://www.arduino.cc/reference/en/libraries/adafruit-busio/)
+- [Adafruit NeoPixel](https://www.arduino.cc/reference/en/libraries/adafruit-neopixel/)
+- [Adafruit SSD1306](https://www.arduino.cc/reference/en/libraries/adafruit-ssd1306/)
+- [ezButton](https://www.arduino.cc/reference/en/libraries/ezbutton/)
+
+> You can install these libraries using the Arduino IDE Library Manager (Sketch > Include Library > Manage Libraries...).
+
+Versions used in this project:
+
+```bash
+Used library         Version    
+Adafruit GFX Library 1.11.7
+Adafruit BusIO       1.14.3
+Wire
+SPI
+Adafruit NeoPixel    1.11.0
+Adafruit SSD1306     2.5.7
+ezButton             1.0.4
+```
+
+> You can use latest versions of these libraries.
+
 ### Modify I2C pins
 
 In order to use the SSD1306 display, you need to modify the I2C pins in `pins_arduino.h` to match the ones used in these boards.
