@@ -18,6 +18,22 @@ void Menu::begin() {
   debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
 
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+  debug.println("Touch left pin: " + String(TOUCH_LEFT));
+  debug.println("Touch right pin: " + String(TOUCH_RIGHT));
+  debug.println("SDA pin: " + String(SDA));
+  debug.println("SCL pin: " + String(SCL));
+  debug.println("TX: " + String(TX));
+  debug.println("RX: " + String(RX));
+#else
+  debug.println("Button left pin: " + String(BUTTON_LEFT));
+  debug.println("Button right pin: " + String(BUTTON_RIGHT));
+  debug.println("SDA pin: " + String(I2C_SDA));
+  debug.println("SCL pin: " + String(I2C_SCL));
+  debug.println("TX: " + String(SERIAL1_TX));
+  debug.println("RX: " + String(SERIAL1_RX));
+#endif
+
   buttonLeft.setDebounceTime(DEBOUNCE_TIME_MS);
   buttonRight.setDebounceTime(DEBOUNCE_TIME_MS);
 
@@ -27,6 +43,8 @@ void Menu::begin() {
     for (;;)
       ;  // Don't proceed, loop forever
   }
+
+#
 
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
@@ -38,6 +56,7 @@ void Menu::begin() {
 void Menu::loop() {
   buttonLeft.loop();
   buttonRight.loop();
+
   static unsigned long buttonLeftPressedTime = 0;
   static unsigned long buttonRightPressedTime = 0;
   static bool buttonLeftPressed = false;

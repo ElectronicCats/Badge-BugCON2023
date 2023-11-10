@@ -5,7 +5,7 @@ MONITOR_PORT_1 = /dev/cu.usbmodem1101
 BOARD_TAG_2 = esp32:esp32:esp32wrover
 MONITOR_PORT_2 = /dev/cu.wchusbserial550D0100521
 BOARD_TAG_3 = esp32:esp32:esp32s3:CDCOnBoot=cdc
-MONITOR_PORT_3 = /dev/cu.usbmodem11101
+MONITOR_PORT_3 = /dev/cu.usbmodem1101
 ARDUINO_CLI_PATH := arduino-cli
 
 ifeq ($(BOARD),rp2040)

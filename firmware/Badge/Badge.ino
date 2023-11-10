@@ -27,6 +27,7 @@
 #include "Menu.h"
 
 #define NEOPIXELS_PIN 19
+// #define NEOPIXELS_PIN 23
 #define NUMPIXELS 4
 
 Menu menu;
