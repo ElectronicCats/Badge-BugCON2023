@@ -55,12 +55,12 @@ void ezTouch::setDebounceTime(unsigned long time) {
 }
 
 int ezTouch::getState(void) {
-  return lastSteadyState;
+  return !lastSteadyState;
 }
 
 int ezTouch::getStateRaw(void) {
 #if defined(ESP32) || defined(ESP32_S3)
-  return touchRead(btnPin) < 50;
+  return !(touchRead(btnPin) < 50);
 #else
   return digitalRead(btnPin);
 #endif

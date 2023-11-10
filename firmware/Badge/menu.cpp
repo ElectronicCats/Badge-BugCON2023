@@ -49,6 +49,8 @@ void Menu::loop() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
+    // debug.println("Left button state: " + String(buttonLeft.getState()));
+    // debug.println("Right button state: " + String(buttonRight.getState()));
     // debug.println("Left Button long click detected: " + String(leftLongClickDetected));
     // debug.println("Right Button long click detected: " + String(rightLongClickDetected));
     // debug.println("Left Button time: " + String(buttonLeftPressedTime));
