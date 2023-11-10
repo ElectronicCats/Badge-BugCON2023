@@ -74,6 +74,30 @@ static const uint8_t SDA = 3;
 static const uint8_t SCL = 4;
 ```
 
+### Fix SSD1306 error
+
+Try to compile the project, if you get the following error:
+
+```bash
+❯ make compile BOARD=rp2040
+arduino-cli compile --fqbn arduino:mbed_rp2040:pico --export-binaries
+/Users/deimos/Documents/Arduino/libraries/Adafruit_SSD1306/Adafruit_SSD1306.cpp:42:10: fatal error: pgmspace.h: No such file or directory
+ #include <pgmspace.h>
+          ^~~~~~~~~~~~
+compilation terminated.
+```
+
+You need to fix the following error by commenting out the following line in `Adafruit_SSD1306.cpp`:
+
+```cpp
+#include <avr/pgmspace.h>
+#elif defined(ESP8266) || defined(ESP32) || defined(ARDUINO_ARCH_RP2040)
+// #include <pgmspace.h>
+#else
+```
+
+> More about this error: https://github.com/adafruit/Adafruit_SSD1306/issues/259
+
 ### Production
 
 In `Menu.h` change the following lines:
