@@ -39,8 +39,11 @@ ezTouch::ezTouch(int pin, int mode) {
   countMode = COUNT_FALLING;
 
   // pinMode(btnPin, mode);
-#if defined(ESP32) || defined(ESP32_S3)
+#if defined(ESP32_DEVKIT)
   previousSteadyState = touchRead(btnPin) < 50;
+#endif
+#if defined(ESP32_S3)
+  previousSteadyState = touchRead(btnPin) > 50000;
 #else
 	previousSteadyState = digitalRead(btnPin);
 #endif
@@ -59,8 +62,11 @@ int ezTouch::getState(void) {
 }
 
 int ezTouch::getStateRaw(void) {
-#if defined(ESP32) || defined(ESP32_S3)
-  return !(touchRead(btnPin) < 50);
+#if defined(ESP32_DEVKIT)
+  return touchRead(btnPin);
+#endif
+#if defined(ESP32_S3)
+  return touchRead(btnPin);
 #else
   return digitalRead(btnPin);
 #endif
@@ -94,8 +100,10 @@ void ezTouch::resetCount(void) {
 
 void ezTouch::loop(void) {
   // read the state of the switch/button:
-#if defined(ESP32) || defined(ESP32_S3)
+#if defined(ESP32_DEVKIT)
   int currentState = touchRead(btnPin) < 50;
+#elif defined(ESP32_S3)
+  int currentState = touchRead(btnPin) > 50000;
 #else
 	int currentState = digitalRead(btnPin);
 #endif

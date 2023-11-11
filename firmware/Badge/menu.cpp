@@ -1,4 +1,3 @@
-
 #include "Menu.h"
 
 #include "menu_helper.h"
@@ -37,14 +36,21 @@ void Menu::begin() {
   buttonLeft.setDebounceTime(DEBOUNCE_TIME_MS);
   buttonRight.setDebounceTime(DEBOUNCE_TIME_MS);
 
+#if defined(MININO)
+  debug.println("MININO");
+  if (!display.begin(SCREEN_ADDRESS)) {
+    Serial.println(F("SH110X allocation failed"));
+    for (;;)
+      ;  // Don't proceed, loop forever
+  }
+#else
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     debug.println(F("SSD1306 allocation failed"));
     for (;;)
       ;  // Don't proceed, loop forever
   }
-
-#
+#endif
 
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
@@ -56,7 +62,6 @@ void Menu::begin() {
 void Menu::loop() {
   buttonLeft.loop();
   buttonRight.loop();
-
   static unsigned long buttonLeftPressedTime = 0;
   static unsigned long buttonRightPressedTime = 0;
   static bool buttonLeftPressed = false;
@@ -68,8 +73,8 @@ void Menu::loop() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
-    // debug.println("Left button state: " + String(buttonLeft.getState()));
-    // debug.println("Right button state: " + String(buttonRight.getState()));
+    debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
+    debug.println("Right button state: " + String(buttonRight.getStateRaw()));
     // debug.println("Left Button long click detected: " + String(leftLongClickDetected));
     // debug.println("Right Button long click detected: " + String(rightLongClickDetected));
     // debug.println("Left Button time: " + String(buttonLeftPressedTime));

@@ -18,7 +18,7 @@ enum MainMenuOptions {
 
 char *mainOptions[] = {
     "1. Juego",
-    "2. Test",
+    "2. LEDs",
     "3. Test",
     "4. Test",
     "5. Test",

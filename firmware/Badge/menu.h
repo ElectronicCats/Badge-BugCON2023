@@ -4,6 +4,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_SSD1306.h>
+#include <Adafruit_SH110X.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <ezButton.h>
@@ -25,7 +26,10 @@
 #if defined(ESP32_DEVKIT)
 #define TOUCH_LEFT 14    // GPIO14
 #define TOUCH_RIGHT 12   // GPIO12
-#else  // ESP32 S3
+#elif defined(MININO)
+#define TOUCH_LEFT 9    // GPIO9
+#define TOUCH_RIGHT 10   // GPIO10
+#else // ESP32_S3
 #define TOUCH_LEFT 18    // GPIO18
 #define TOUCH_RIGHT 7   // GPIO7
 #endif
@@ -93,7 +97,11 @@ static const unsigned char PROGMEM logo_bmp[] =
 
 class Menu {
  private:
+#ifdef MININO
+  Adafruit_SH1106G display;
+#else
   Adafruit_SSD1306 display;
+#endif
   Debug debug;
   uint8_t selectedOption;
   uint8_t previousLayer;

@@ -5,6 +5,7 @@
 	#ifdef USB_VID
 		#define BOARD_NAME "ESP32-S3"
 		#define ESP32_S3
+		#define MININO
 	#else
 		#define BOARD_NAME "ESP32"
 		#define ESP32_DEVKIT

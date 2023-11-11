@@ -32,15 +32,20 @@
 
 Menu menu;
 
-Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800);
+// Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   menu.begin();
-  pixels.begin();
+  // pixels.begin();
 }
 
 void loop() {
   menu.loop();
+  // if (touchRead(11) > 50000) {
+  //   Serial.println("Touched!");
+  //   Serial.println(touchRead(11) > 50000);
+  //   delay(1000);
+  // }
 }
 
 // void serialTest() {
