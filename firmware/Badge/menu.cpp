@@ -152,9 +152,8 @@ void Menu::showVMenu() {
   display.setCursor(0, 0);
 
   uint8_t startIdx = (selectedOption >= 4) ? selectedOption - 3 : 0;
-  uint8_t endIdx = (selectedOption >= 4) ? selectedOption + 1 : optionsSize - 1;
 
-  for (uint8_t i = startIdx; i <= endIdx; i++) {
+  for (uint8_t i = startIdx; i <= optionsSize; i++) {
     debug.println(options[i]);
     if (i == selectedOption) {
       display.setTextColor(BLACK, WHITE);
@@ -165,7 +164,6 @@ void Menu::showVMenu() {
     }
   }
 
-  debug.println("");
   display.display();
 }
 
@@ -177,7 +175,7 @@ char **Menu::updateVMenuOptions() {
       // break;
     default:
       options = mainOptions;
-      optionsSize = sizeof(mainOptions) / sizeof(mainOptions[0]);
+      optionsSize = sizeof(mainOptions) / sizeof(mainOptions[0]) - 1;
       break;
   }
 
@@ -391,7 +389,7 @@ void Menu::gameOver(int score) {
 // Display score while running the game
 void Menu::displayScore(int score) {
   display.setTextSize(1);
-  display.setCursor(64, 10);
+  display.setCursor(60, 10);
   display.print("Puntaje: ");
   display.print(score);
 }
