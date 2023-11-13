@@ -41,7 +41,7 @@
 #if defined(ESP32_DEVKIT)
 #define TOUCH_THRESHOLD 50
 #elif defined(ESP32_S3)
-#define TOUCH_THRESHOLD 40000
+#define TOUCH_THRESHOLD 30000
 #endif
 
 class ezTouch {

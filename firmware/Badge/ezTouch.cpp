@@ -65,7 +65,11 @@ int ezTouch::getState(void) {
 }
 
 int ezTouch::getStateRaw(void) {
-  return getTouchValue();
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+  return touchRead(btnPin);
+#else
+  return -1;
+#endif
 }
 
 bool ezTouch::isPressed(void) {
