@@ -3,36 +3,15 @@
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoPixel.h>
-#include <Adafruit_SSD1306.h>
 #include <Adafruit_SH110X.h>
+#include <Adafruit_SSD1306.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <ezButton.h>
 
 #include "Debug.h"
-#include "hardware.h"
-
-#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
 #include "ezTouch.h"
-#endif
-
-#define DEBOUNCE_TIME_MS 70
-#define LONG_CLICK_TIME_MS 500
-#define BACK_ANIMATION_TIME_MS 150
-#define BUTTON_LEFT 27   // GPIO27
-#define BUTTON_RIGHT 26  // GPIO26 -> For development in Raspberry Pi Pico
-// #define BUTTON_RIGHT 25  // GPIO25 -> For production in BugCON badge
-
-#if defined(ESP32_DEVKIT)
-#define TOUCH_LEFT 14    // GPIO14
-#define TOUCH_RIGHT 12   // GPIO12
-#elif defined(MININO)
-#define TOUCH_LEFT 9    // GPIO9
-#define TOUCH_RIGHT 10   // GPIO10
-#else // ESP32_S3
-#define TOUCH_LEFT 18    // GPIO18
-#define TOUCH_RIGHT 7   // GPIO7
-#endif
+#include "hardware.h"
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
@@ -73,7 +52,7 @@
 #define TREE_Y 9
 
 #define JUMP_PIXEL 22  // Number of pixel dino will jump
-// #define JUMP_PIXEL 11 
+// #define JUMP_PIXEL 11
 
 #define LOGO_HEIGHT 16
 #define LOGO_WIDTH 16
@@ -109,11 +88,18 @@ class Menu {
   uint8_t optionsSize;
   uint8_t bannerSize;
   uint8_t menuOrientation;
+  Adafruit_NeoPixel pixels;
   void showVMenu();
+  void showMenu();
   char **updateVMenuOptions();
   void animateLeftLongPress(bool longClick);
   void animateRightLongPress(bool longClick);
   void handleSelection();
+  void updatePreviousLayer();
+  void handleBackButton();
+  void mainMenu();
+  void ledsMenu();
+  void ledsOff();
   // Dino Game
   void gameSetup();
   void introMessage();

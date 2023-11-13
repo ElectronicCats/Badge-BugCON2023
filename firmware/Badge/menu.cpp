@@ -10,9 +10,12 @@ ezTouch buttonLeft(TOUCH_LEFT);
 ezTouch buttonRight(TOUCH_RIGHT);
 #endif
 
-Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET) {}
+Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET),
+               pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800) {}
 
 void Menu::begin() {
+  pixels.begin();
+  ledsOff();
   debug.begin(9600);
   debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
@@ -73,19 +76,13 @@ void Menu::loop() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
-    debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
-    debug.println("Right button state: " + String(buttonRight.getStateRaw()));
-    // debug.println("Left Button long click detected: " + String(leftLongClickDetected));
-    // debug.println("Right Button long click detected: " + String(rightLongClickDetected));
-    // debug.println("Left Button time: " + String(buttonLeftPressedTime));
-    // debug.println("Right Button time: " + String(buttonRightPressedTime));
-    // debug.println("Left button click elapsed time: " + String((millis() - buttonLeftPressedTime)/1000));
-    // debug.println("Right button click elapsed time: " + String((millis() - buttonRightPressedTime)/1000));
-    // debug.println("");
+    // debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
+    // debug.println("Right button state: " + String(buttonRight.getStateRaw()));
   }
 
   animateLeftLongPress(leftLongClickDetected);
   animateRightLongPress(rightLongClickDetected);
+  updatePreviousLayer();
 
   if (buttonLeft.isPressed()) {
     debug.println("Left button pressed");
@@ -103,13 +100,13 @@ void Menu::loop() {
   if (buttonLeftPressed && !leftLongClickDetected && (millis() - buttonLeftPressedTime > LONG_CLICK_TIME_MS)) {
     debug.println("Left button long pressed");
     leftLongClickDetected = true;
+    handleBackButton();
   }
 
   // Verify right long click
   if (buttonRightPressed && !rightLongClickDetected && (millis() - buttonRightPressedTime > LONG_CLICK_TIME_MS)) {
     debug.println("Right button long pressed");
     rightLongClickDetected = true;
-
     handleSelection();
   }
 
@@ -153,7 +150,7 @@ void Menu::showVMenu() {
 
   uint8_t startIdx = (selectedOption >= 4) ? selectedOption - 3 : 0;
 
-  for (uint8_t i = startIdx; i <= optionsSize; i++) {
+  for (uint8_t i = startIdx; i < optionsSize; i++) {
     debug.println(options[i]);
     if (i == selectedOption) {
       display.setTextColor(BLACK, WHITE);
@@ -167,15 +164,25 @@ void Menu::showVMenu() {
   display.display();
 }
 
+void Menu::showMenu() {
+  showVMenu();
+}
+
 char **Menu::updateVMenuOptions() {
   char **options;
 
   switch (currentLayer) {
     case LAYER_MAIN_MENU:
-      // break;
+      options = mainOptions;
+      optionsSize = sizeof(mainOptions) / sizeof(mainOptions[0]);
+      break;
+    case LAYER_LEDS_MENU:
+      options = ledsOptions;
+      optionsSize = sizeof(ledsOptions) / sizeof(ledsOptions[0]);
+      break;
     default:
       options = mainOptions;
-      optionsSize = sizeof(mainOptions) / sizeof(mainOptions[0]) - 1;
+      optionsSize = sizeof(mainOptions) / sizeof(mainOptions[0]);
       break;
   }
 
@@ -259,23 +266,117 @@ void Menu::animateRightLongPress(bool longClick) {
 void Menu::handleSelection() {
   switch (currentLayer) {
     case LAYER_MAIN_MENU:
-      switch (selectedOption) {
-        case MAIN_MENU_DINO:
-          gameSetup();
-          break;
-        case MAIN_MENU_TEST:
-          break;
-        case MAIN_MENU_TEST1:
-          break;
-        case MAIN_MENU_TEST2:
-          break;
-        case MAIN_MENU_TEST3:
-          break;
-        case MAIN_MENU_TEST4:
-          break;
-        default:
-          break;
+      mainMenu();
+      break;
+    case LAYER_LEDS_MENU:
+      ledsMenu();
+      break;
+    default:
+      break;
+  }
+
+  showMenu();
+}
+
+void Menu::updatePreviousLayer() {
+  switch (currentLayer) {
+    case LAYER_MAIN_MENU:
+    case LAYER_LEDS_MENU:
+      previousLayer = LAYER_MAIN_MENU;
+      break;
+    default:
+      debug.println("Unknown layer: " + String(currentLayer));
+      previousLayer = LAYER_MAIN_MENU;
+      break;
+  }
+}
+
+void Menu::handleBackButton() {
+  currentLayer = previousLayer;
+  selectedOption = 0;
+  // TODO: update orientation
+  showMenu();
+}
+
+void Menu::mainMenu() {
+  switch (selectedOption) {
+    case MAIN_MENU_DINO:
+      gameSetup();
+      break;
+    case MAIN_MENU_LEDS:
+      currentLayer = LAYER_LEDS_MENU;
+      break;
+    case MAIN_MENU_TEST1:
+      break;
+    case MAIN_MENU_TEST2:
+      break;
+    case MAIN_MENU_TEST3:
+      break;
+    case MAIN_MENU_TEST4:
+      break;
+    default:
+      break;
+  }
+}
+
+void Menu::ledsOff() {
+  pixels.clear();
+  pixels.show();
+}
+
+void Menu::ledsMenu() {
+  switch (selectedOption) {
+    case LEDS_MENU_OFF:
+      ledsOff();
+      break;
+    case LEDS_MENU_RED:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(255, 0, 0));
       }
+      pixels.show();
+      break;
+    case LEDS_MENU_GREEN:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+      }
+      pixels.show();
+      break;
+    case LEDS_MENU_BLUE:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 0, 255));
+      }
+      pixels.show();
+      break;
+    case LEDS_MENU_YELLOW:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(255, 255, 0));
+      }
+      pixels.show();
+      break;
+    case LEDS_MENU_PINK:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(100, 0, 100));
+      }
+      pixels.show();
+      break;
+    case LEDS_MENU_CYAN:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(0, 255, 255));
+      }
+      pixels.show();
+      break;
+    case LEDS_MENU_WHITE:
+      pixels.clear();
+      for (int i = 0; i < NUMPIXELS; i++) {
+        pixels.setPixelColor(i, pixels.Color(255, 255, 255));
+      }
+      pixels.show();
       break;
     default:
       break;

@@ -26,17 +26,10 @@
 ***********************************************************************************/
 #include "Menu.h"
 
-#define NEOPIXELS_PIN 19
-// #define NEOPIXELS_PIN 23
-#define NUMPIXELS 4
-
 Menu menu;
-
-// Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   menu.begin();
-  // pixels.begin();
 }
 
 void loop() {
