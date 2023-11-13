@@ -29,7 +29,8 @@
 #define TOUCH_LEFT 9    // GPIO9
 #define TOUCH_RIGHT 10   // GPIO10
 #else // ESP32_S3
-#define TOUCH_LEFT 18    // GPIO18
+#define OLD_TOUCH_LEFT 18    // GPIO18
+#define TOUCH_LEFT 8    // GPIO8
 #define TOUCH_RIGHT 7   // GPIO7
 #endif
 

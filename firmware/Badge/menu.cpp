@@ -16,8 +16,13 @@ Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET),
 void Menu::begin() {
   pixels.begin();
   ledsOff();
+#if defined(ESP32_S3)
+  // Disable old left touch pin
+  pinMode(OLD_TOUCH_LEFT, INPUT);
+#endif
+
   debug.begin(9600);
-  debug.waitForSerialConnection();
+  // debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
