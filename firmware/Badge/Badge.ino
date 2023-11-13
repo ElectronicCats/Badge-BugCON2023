@@ -25,6 +25,7 @@
   Distributed as-is; no warranty is given.
 ***********************************************************************************/
 #include "Menu.h"
+#include "test.h"
 
 Menu menu;
 
@@ -34,11 +35,6 @@ void setup() {
 
 void loop() {
   menu.loop();
-  // if (touchRead(11) > 50000) {
-  //   Serial.println("Touched!");
-  //   Serial.println(touchRead(11) > 50000);
-  //   delay(1000);
-  // }
 }
 
 // void serialTest() {

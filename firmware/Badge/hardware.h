@@ -29,10 +29,10 @@
 #define TOUCH_LEFT 9    // GPIO9
 #define TOUCH_RIGHT 10   // GPIO10
 #else // ESP32_S3
-#define OLD_TOUCH_LEFT 18    // GPIO18
 #define TOUCH_LEFT 8    // GPIO8
 #define TOUCH_RIGHT 7   // GPIO7
 #endif
+#define OLD_TOUCH_LEFT 18    // GPIO18
 
 #if defined(RP2040)
 // #define NEOPIXELS_PIN 16  // GPIO23 -> For development in Raspberry Pi Pico

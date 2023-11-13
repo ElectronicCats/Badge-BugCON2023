@@ -4,16 +4,27 @@
 enum MenuLayer {
   LAYER_MAIN_MENU = 0,
   LAYER_LEDS_MENU,
+  LAYER_AIRTAG_MENU,
 };
 
+#if defined(RP2040)
 enum MainMenuOptions {
   MAIN_MENU_DINO = 0,
   MAIN_MENU_LEDS,
-  MAIN_MENU_TEST1,
-  MAIN_MENU_TEST2,
-  MAIN_MENU_TEST3,
-  MAIN_MENU_TEST4,
+  MAIN_MENU_PAIR,
+  MAIN_MENU_INFO,
+  MAIN_MENU_TERMINAL,
 };
+#else
+enum MainMenuOptions {
+  MAIN_MENU_DINO = 0,
+  MAIN_MENU_LEDS,
+  MAIN_MENU_PAIR,
+  MAIN_MENU_INFO,
+  MAIN_MENU_AIRTAG,
+  MAIN_MENU_WEB_SERVER,
+};
+#endif
 
 enum LedsMenuOptions {
   LEDS_MENU_OFF = 0,
@@ -28,13 +39,22 @@ enum LedsMenuOptions {
 
 /************************ Main menu ***************************/
 
+#if defined(RP2040)
 char *mainOptions[] = {
     "1. Juego",
     "2. LEDs",
     "3. Vincular",
     "4. Informacion",
-    "5. Test",
-    "6. Test"};
+    "5. Terminal"};
+#else
+char *mainOptions[] = {
+    "1. Juego",
+    "2. LEDs",
+    "3. Vincular",
+    "4. Informacion",
+    "5. AirTag",
+    "6. Servidor web"};
+#endif
 
 /************************ LEDs menu ***************************/
 

@@ -12,6 +12,7 @@
 #include "Debug.h"
 #include "ezTouch.h"
 #include "hardware.h"
+#include "AirTag.h"
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
@@ -81,6 +82,9 @@ class Menu {
 #else
   Adafruit_SSD1306 display;
 #endif
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+  Airtag airTag;
+#endif
   Debug debug;
   uint8_t selectedOption;
   uint8_t previousLayer;
@@ -89,6 +93,7 @@ class Menu {
   uint8_t bannerSize;
   uint8_t menuOrientation;
   Adafruit_NeoPixel pixels;
+  void scanKeys();
   void showVMenu();
   void showMenu();
   char **updateVMenuOptions();
@@ -100,6 +105,7 @@ class Menu {
   void mainMenu();
   void ledsMenu();
   void ledsOff();
+  void airTagsMenu();
   // Dino Game
   void gameSetup();
   void introMessage();

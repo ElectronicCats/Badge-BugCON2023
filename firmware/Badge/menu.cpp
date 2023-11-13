@@ -22,7 +22,7 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  // debug.waitForSerialConnection();
+  debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
@@ -67,7 +67,7 @@ void Menu::begin() {
   showVMenu();
 }
 
-void Menu::loop() {
+void Menu::scanKeys() {
   buttonLeft.loop();
   buttonRight.loop();
   static unsigned long buttonLeftPressedTime = 0;
@@ -144,11 +144,20 @@ void Menu::loop() {
 
     showVMenu();
   }
+
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+  if (currentLayer == LAYER_AIRTAG_MENU) {
+    airTag.loop();
+  }
+#endif
+}
+
+void Menu::loop() {
+  scanKeys();
 }
 
 void Menu::showVMenu() {
   char **options = updateVMenuOptions();
-  display.clearDisplay();
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0, 0);
@@ -276,6 +285,9 @@ void Menu::handleSelection() {
     case LAYER_LEDS_MENU:
       ledsMenu();
       break;
+    case LAYER_AIRTAG_MENU:
+      airTagsMenu();
+      break;
     default:
       break;
   }
@@ -287,6 +299,7 @@ void Menu::updatePreviousLayer() {
   switch (currentLayer) {
     case LAYER_MAIN_MENU:
     case LAYER_LEDS_MENU:
+    case LAYER_AIRTAG_MENU:
       previousLayer = LAYER_MAIN_MENU;
       break;
     default:
@@ -311,14 +324,21 @@ void Menu::mainMenu() {
     case MAIN_MENU_LEDS:
       currentLayer = LAYER_LEDS_MENU;
       break;
-    case MAIN_MENU_TEST1:
+    case MAIN_MENU_PAIR:
       break;
-    case MAIN_MENU_TEST2:
+    case MAIN_MENU_INFO:
       break;
-    case MAIN_MENU_TEST3:
+#if defined(RP2040)
+    case MAIN_MENU_TERMINAL:
       break;
-    case MAIN_MENU_TEST4:
+#else
+    case MAIN_MENU_AIRTAG:
+      currentLayer = LAYER_AIRTAG_MENU;
+      airTagsMenu();
       break;
+    case MAIN_MENU_WEB_SERVER:
+      break;
+#endif
     default:
       break;
   }
@@ -386,6 +406,40 @@ void Menu::ledsMenu() {
     default:
       break;
   }
+}
+
+void Menu::airTagsMenu() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.println();
+  display.setCursor(64 - 3 * 6, 10);
+  display.println("Emulando");
+  display.setCursor(64 - 3 * 4, 20);
+  display.println("AirTag");
+  display.display();
+
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+  debug.println("Starting BLE advertising");
+  airTag.start();
+#endif
+
+  for (;;) {
+    buttonLeft.loop();
+
+    if (buttonLeft.isPressed()) {
+      break;
+    }
+
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+    airTag.loop();
+#endif
+  }
+
+#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
+  debug.println("Stopping BLE advertising");
+  airTag.stop();
+#endif
 }
 
 /**
