@@ -38,6 +38,11 @@
 #define COUNT_FALLING 0
 #define COUNT_RISING 1
 #define COUNT_BOTH 2
+#if defined(ESP32_DEVKIT)
+#define TOUCH_THRESHOLD 50
+#elif defined(ESP32_S3)
+#define TOUCH_THRESHOLD 40000
+#endif
 
 class ezTouch {
  private:
@@ -49,7 +54,7 @@ class ezTouch {
   int lastSteadyState;       // the last steady state from the input pin
   int lastFlickerableState;  // the last flickerable state from the input pin
   unsigned long lastDebounceTime;  // the last time the output pin was toggled
-
+  int getTouchValue(void);
 
  public:
   ezTouch(int pin);

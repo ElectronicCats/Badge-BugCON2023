@@ -39,18 +39,21 @@ ezTouch::ezTouch(int pin, int mode) {
   countMode = COUNT_FALLING;
 
   // pinMode(btnPin, mode);
-#if defined(ESP32_DEVKIT)
-  previousSteadyState = touchRead(btnPin) < 50;
-#endif
-#if defined(ESP32_S3)
-  previousSteadyState = touchRead(btnPin) > 50000;
-#else
-	previousSteadyState = digitalRead(btnPin);
-#endif
+	previousSteadyState = getTouchValue();
   lastSteadyState = previousSteadyState;
   lastFlickerableState = previousSteadyState;
 
   lastDebounceTime = 0;
+}
+
+int ezTouch::getTouchValue(void) {
+#if defined(ESP32_DEVKIT)
+  return touchRead(btnPin) < TOUCH_THRESHOLD;
+#elif defined(ESP32_S3)
+  return touchRead(btnPin) > TOUCH_THRESHOLD;
+#else
+  return -1;
+#endif
 }
 
 void ezTouch::setDebounceTime(unsigned long time) {
@@ -62,14 +65,7 @@ int ezTouch::getState(void) {
 }
 
 int ezTouch::getStateRaw(void) {
-#if defined(ESP32_DEVKIT)
-  return touchRead(btnPin);
-#endif
-#if defined(ESP32_S3)
-  return touchRead(btnPin);
-#else
-  return digitalRead(btnPin);
-#endif
+  return getTouchValue();
 }
 
 bool ezTouch::isPressed(void) {
@@ -100,13 +96,7 @@ void ezTouch::resetCount(void) {
 
 void ezTouch::loop(void) {
   // read the state of the switch/button:
-#if defined(ESP32_DEVKIT)
-  int currentState = touchRead(btnPin) < 50;
-#elif defined(ESP32_S3)
-  int currentState = touchRead(btnPin) > 50000;
-#else
-	int currentState = digitalRead(btnPin);
-#endif
+  int currentState = getTouchValue();
   unsigned long currentTime = millis();
 
   // check to see if you just pressed the button

@@ -76,8 +76,8 @@ void Menu::loop() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
-    // debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
-    // debug.println("Right button state: " + String(buttonRight.getStateRaw()));
+    debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
+    debug.println("Right button state: " + String(buttonRight.getStateRaw()));
   }
 
   animateLeftLongPress(leftLongClickDetected);
