@@ -50,7 +50,11 @@ int ezTouch::getTouchValue(void) {
 #if defined(ESP32_DEVKIT)
   return touchRead(btnPin) < TOUCH_THRESHOLD;
 #elif defined(ESP32_S3)
-  return touchRead(btnPin) > TOUCH_THRESHOLD;
+  if (btnPin == TOUCH_LEFT) {
+    return touchRead(btnPin) > TOUCH_THRESHOLD + 10000;
+  } else {
+    return touchRead(btnPin) > TOUCH_THRESHOLD;
+  }
 #else
   return -1;
 #endif
