@@ -120,6 +120,7 @@ class Menu {
   void airTagsMenu();
   void talksMenu();
   void conferenceHelp();
+  void conferenceSuccess();
   void fillTalksList();
   // Dino Game
   void gameSetup();

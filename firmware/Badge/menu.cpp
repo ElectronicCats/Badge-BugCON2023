@@ -23,7 +23,7 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  // debug.waitForSerialConnection();
+  debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
   speaker.setTalk(17);  // Value from 0 to 34, check UartCommunication.cpp
   debug.println("ID: " + String(speaker.getID()));
@@ -166,6 +166,16 @@ void Menu::loop() {
   if (vip.isCommunicationEnabled()) {
     vip.receiveTalkName();
   }
+
+  if (vip.receivedSuccess) {
+    vip.receivedSuccess = false;
+    currentLayer = LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER;
+    selectedOption = 0;
+    vip.disableCommunication();
+    speaker.disableCommunication();
+    updateOrientation();
+    showMenu();
+  }
 }
 
 void Menu::showVMenu() {
@@ -261,8 +271,8 @@ char **Menu::updateVMenuOptions() {
       optionsSize = sizeof(conferenceOptions) / sizeof(conferenceOptions[0]);
       break;
     case LAYER_CONFERENCE_LIST:
+      fillTalksList();
       options = conferenceList;
-      // optionsSize = sizeof(conferenceList) / sizeof(conferenceList[0]);
       optionsSize = talkLineIndex + 1;
       break;
     default:
@@ -287,6 +297,10 @@ char **Menu::updateHMenuBanner() {
       banner = conferenceHelpBanner;
       bannerSize = sizeof(conferenceHelpBanner) / sizeof(conferenceHelpBanner[0]);
       break;
+    case LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER:
+      banner = pairingSuccessBanner;
+      bannerSize = sizeof(pairingSuccessBanner) / sizeof(pairingSuccessBanner[0]);
+      break;
     default:
       banner = errorBanner;
       bannerSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
@@ -306,6 +320,7 @@ char **Menu::updateHMenuOptions() {
       optionsSize = 0;  // Don't show options
       break;
     case LAYER_CONFERENCE_HELP_BANNER:
+    case LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER:
       options = oneOption;
       optionsSize = sizeof(oneOption) / sizeof(oneOption[0]);
       break;
@@ -406,6 +421,9 @@ void Menu::handleSelection() {
     case LAYER_CONFERENCE_HELP_BANNER:
       conferenceHelp();
       break;
+    case LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER:
+      conferenceSuccess();
+      break;
     default:
       break;
   }
@@ -426,6 +444,10 @@ void Menu::updatePreviousLayer() {
     case LAYER_CONFERENCE_LIST:
     case LAYER_CONFERENCE_HELP_BANNER:
       previousLayer = LAYER_CONFERENCE_MENU;
+      break;
+    case LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER:
+      fillTalksList();
+      previousLayer = LAYER_CONFERENCE_LIST;
       break;
     default:
       debug.println("Unknown layer: " + String(currentLayer));
@@ -456,6 +478,7 @@ void Menu::updateOrientation() {
   switch (currentLayer) {
     case LAYER_CONFERENCE_PAIRING_BANNER:
     case LAYER_CONFERENCE_HELP_BANNER:
+    case LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER:
       menuOrientation = HORIZONTAL_MENU;
       break;
     default:  // Most of the menus are vertical
@@ -598,7 +621,6 @@ void Menu::talksMenu() {
       currentLayer = LAYER_CONFERENCE_PAIRING_BANNER;
       break;
     case PAIR_MENU_CONFERENCES:
-      fillTalksList();
       currentLayer = LAYER_CONFERENCE_LIST;
       break;
     case PAIR_MENU_HELP:
@@ -613,6 +635,16 @@ void Menu::conferenceHelp() {
   switch (selectedOption) {
     case OK:
       currentLayer = LAYER_CONFERENCE_MENU;
+      break;
+    default:
+      break;
+  }
+}
+
+void Menu::conferenceSuccess() {
+  switch (selectedOption) {
+    case OK:
+      currentLayer = LAYER_CONFERENCE_LIST;
       break;
     default:
       break;

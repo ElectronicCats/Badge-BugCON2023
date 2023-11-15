@@ -6,6 +6,7 @@ enum MenuLayer {
   LAYER_LEDS_MENU,
   LAYER_CONFERENCE_MENU,
   LAYER_CONFERENCE_PAIRING_BANNER,
+  LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER,
   LAYER_CONFERENCE_LIST,
   LAYER_CONFERENCE_HELP_BANNER,
 };
@@ -119,7 +120,7 @@ char *pairingBanner[] = {
 
 char *pairingSuccessBanner[] = {
     "  Nueva conferencia  ",
-    "    agregada"};
+    "      agregada       "};
 
 #if defined(RP2040)
 char *conferenceHelpBanner[] = {
@@ -134,6 +135,7 @@ char *conferenceHelpBanner[] = {
 #endif
 
 char *conferenceList[100] = {
-    "Conferencias"};
+    "  Las conferencias   ",
+    "   apareceran aqui   "};
 
 #endif
