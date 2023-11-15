@@ -98,17 +98,22 @@ class Menu {
   Adafruit_NeoPixel pixels;
   void scanKeys();
   void showVMenu();
+  void showHMenu();
   void showMenu();
   char **updateVMenuOptions();
+  char **updateHMenuBanner();
+  char **updateHMenuOptions();
   void animateLeftLongPress(bool longClick);
   void animateRightLongPress(bool longClick);
   void handleSelection();
   void updatePreviousLayer();
   void handleBackButton();
+  void updateOrientation();
   void mainMenu();
   void ledsMenu();
   void ledsOff();
   void airTagsMenu();
+  void pairMenu();
   // Dino Game
   void gameSetup();
   void introMessage();

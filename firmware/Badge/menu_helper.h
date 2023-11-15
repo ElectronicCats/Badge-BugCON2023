@@ -5,6 +5,7 @@ enum MenuLayer {
   LAYER_MAIN_MENU = 0,
   LAYER_LEDS_MENU,
   LAYER_PAIR_MENU,
+  LAYER_PAIRING_BANNER,
 };
 
 #if defined(RP2040)
@@ -42,6 +43,21 @@ enum PairMenuOptions {
   PAIR_MENU_CANCEL,
 };
 
+/************************* Banners ****************************/
+
+char *errorBanner[] = {
+    "",
+    "    Error"};
+
+// Option to horizontal menu
+char *oneOption[] = {
+    "Aceptar"};
+
+// Options to horizontal menu
+char *twoOptions[] = {
+    "Aceptar",
+    "Cancelar"};
+
 /************************ Main menu ***************************/
 
 #if defined(RP2040)
@@ -78,5 +94,9 @@ char *ledsOptions[] = {
 char *pairOptions[] = {
     "1. Iniciar",
     "2. Cancelar"};
+
+char *pairingBanner[] = {
+    "",
+    "   Vinculando..."};
 
 #endif

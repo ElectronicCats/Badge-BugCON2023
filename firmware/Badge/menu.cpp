@@ -83,14 +83,6 @@ void Menu::scanKeys() {
   static bool leftLongClickDetected = false;
   static bool rightLongClickDetected = false;
 
-  // Print debug info every 1 second
-  static unsigned long lastDebugPrint = 0;
-  if (millis() - lastDebugPrint > 1000) {
-    lastDebugPrint = millis();
-    // debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
-    // debug.println("Right button state: " + String(buttonRight.getStateRaw()));
-  }
-
   animateLeftLongPress(leftLongClickDetected);
   animateRightLongPress(rightLongClickDetected);
   updatePreviousLayer();
@@ -133,7 +125,7 @@ void Menu::scanKeys() {
     if (selectedOption == 255)  // Underflow
       selectedOption = 0;
 
-    showVMenu();
+    showMenu();
   }
 
   if (buttonRight.isReleased()) {
@@ -148,12 +140,23 @@ void Menu::scanKeys() {
     if (selectedOption > optionsSize - 1)
       selectedOption = optionsSize - 1;
 
-    showVMenu();
+    showMenu();
   }
 }
 
 void Menu::loop() {
   scanKeys();
+
+  // Print debug info every 1 second
+  static unsigned long lastDebugPrint = 0;
+  if (millis() - lastDebugPrint > 1000) {
+    lastDebugPrint = millis();
+    // debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
+    // debug.println("Right button state: " + String(buttonRight.getStateRaw()));
+    debug.println("Orientation: " + String(menuOrientation == VERTICAL_MENU ? "Vertical" : "Horizontal"));
+    debug.println("Selected option: " + String(selectedOption));
+    debug.println("Current layer: " + String(currentLayer));
+  }
 
   if (speaker.isCommunicationEnabled()) {
     speaker.sendTalkName();
@@ -186,8 +189,58 @@ void Menu::showVMenu() {
   display.display();
 }
 
+void Menu::showHMenu() {
+  char **banner = updateHMenuBanner();
+  char **options = updateHMenuOptions();
+
+  // Structure: 64x32 pixels
+  /*
+   *  -------------------------
+   * |         Banner         |
+   * |------------------------|
+   * |   Aceptar   Cancelar   |
+   * -------------------------
+   */
+
+  display.clearDisplay();
+  display.setTextSize(1);
+
+  // Show banner
+  for (uint8_t i = 0; i < bannerSize; i++) {
+    display.setCursor(0, i * 8);
+    display.setTextColor(WHITE);
+    display.println(banner[i]);
+  }
+
+  if (optionsSize == 1) {
+    display.setCursor(38, 24);
+    display.setTextColor(BLACK, WHITE);
+    display.println(options[0]);
+  } else if (optionsSize == 2) {
+    if (selectedOption == 0) {
+      display.setCursor(0, 24);
+      display.setTextColor(BLACK, WHITE);
+      display.println(options[0]);
+      display.setCursor(64, 24);
+      display.setTextColor(WHITE);
+      display.println(options[1]);
+    } else {
+      display.setCursor(0, 24);
+      display.setTextColor(WHITE);
+      display.println(options[0]);
+      display.setCursor(64, 24);
+      display.setTextColor(BLACK, WHITE);
+      display.println(options[1]);
+    }
+  }
+}
+
 void Menu::showMenu() {
-  showVMenu();
+  if (menuOrientation == VERTICAL_MENU) {
+    showVMenu();
+  } else {
+    showHMenu();
+  }
 }
 
 char **Menu::updateVMenuOptions() {
@@ -207,8 +260,45 @@ char **Menu::updateVMenuOptions() {
       optionsSize = sizeof(pairOptions) / sizeof(pairOptions[0]);
       break;
     default:
-      options = mainOptions;
-      optionsSize = sizeof(mainOptions) / sizeof(mainOptions[0]);
+      options = errorBanner;
+      optionsSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
+      debug.println("Unknown vertical layer: " + String(currentLayer));
+      break;
+  }
+
+  return options;
+}
+
+char **Menu::updateHMenuBanner() {
+  char **banner;
+
+  switch (currentLayer) {
+    case LAYER_PAIRING_BANNER:
+      banner = pairingBanner;
+      // TODO: test with banner size
+      bannerSize = sizeof(pairingBanner) / sizeof(pairingBanner[0]);
+      break;
+    default:
+      banner = errorBanner;
+      bannerSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
+      debug.println("Unknown layer: " + String(currentLayer));
+      break;
+  }
+
+  return banner;
+}
+
+char **Menu::updateHMenuOptions() {
+  char **options;
+
+  switch (currentLayer) {
+    case LAYER_PAIRING_BANNER:
+      options = oneOption;
+      optionsSize = sizeof(oneOption) / sizeof(oneOption[0]);
+      break;
+    default:
+      options = oneOption;
+      optionsSize = 0;
       break;
   }
 
@@ -298,13 +388,13 @@ void Menu::handleSelection() {
       ledsMenu();
       break;
     case LAYER_PAIR_MENU:
-      speaker.enableCommunication();
-      vip.enableCommunication();
+      pairMenu();
       break;
     default:
       break;
   }
 
+  updateOrientation();
   showMenu();
 }
 
@@ -315,6 +405,9 @@ void Menu::updatePreviousLayer() {
     case LAYER_PAIR_MENU:
       previousLayer = LAYER_MAIN_MENU;
       break;
+    case LAYER_PAIRING_BANNER:
+      previousLayer = LAYER_PAIR_MENU;
+      break;
     default:
       debug.println("Unknown layer: " + String(currentLayer));
       previousLayer = LAYER_MAIN_MENU;
@@ -323,12 +416,32 @@ void Menu::updatePreviousLayer() {
 }
 
 void Menu::handleBackButton() {
+  switch (currentLayer) {
+    case LAYER_PAIRING_BANNER:
+      speaker.disableCommunication();
+      vip.disableCommunication();
+      break;
+    default:
+      break;
+  }
+
   currentLayer = previousLayer;
   selectedOption = 0;
-  speaker.disableCommunication();
-  vip.disableCommunication();
-  // TODO: update orientation
+  updateOrientation();
   showMenu();
+}
+
+void Menu::updateOrientation() {
+  debug.println("Updating orientation for layer: " + String(currentLayer));
+
+  switch (currentLayer) {
+    case LAYER_PAIRING_BANNER:
+      menuOrientation = HORIZONTAL_MENU;
+      break;
+    default:  // Most of the menus are vertical
+      menuOrientation = VERTICAL_MENU;
+      break;
+  }
 }
 
 void Menu::mainMenu() {
@@ -455,6 +568,23 @@ void Menu::airTagsMenu() {
   debug.println("Stopping BLE advertising");
   airTag.stop();
 #endif
+}
+
+void Menu::pairMenu() {
+  switch (selectedOption) {
+    case PAIR_MENU_START:
+      speaker.enableCommunication();
+      vip.enableCommunication();
+      currentLayer = LAYER_PAIRING_BANNER;
+      break;
+    case PAIR_MENU_CANCEL:
+      speaker.disableCommunication();
+      vip.disableCommunication();
+      currentLayer = LAYER_MAIN_MENU;
+      break;
+    default:
+      break;
+  }
 }
 
 /**
