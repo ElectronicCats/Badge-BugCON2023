@@ -24,11 +24,11 @@ void Menu::begin() {
   debug.begin(9600);
   // debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalkName("Nombre de la charla");
+  speaker.setTalkName("Cloud Security - The Blue Team Way");
   debug.println("ID: " + String(speaker.getID()));
 
 #if defined(ESP32)
-  debug.disable();  // Uncomment to test serial communication
+  // debug.disable();  // Uncomment to test serial communication
 #endif
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
@@ -153,9 +153,9 @@ void Menu::loop() {
     lastDebugPrint = millis();
     // debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
     // debug.println("Right button state: " + String(buttonRight.getStateRaw()));
-    debug.println("Orientation: " + String(menuOrientation == VERTICAL_MENU ? "Vertical" : "Horizontal"));
-    debug.println("Selected option: " + String(selectedOption));
-    debug.println("Current layer: " + String(currentLayer));
+    // debug.println("Orientation: " + String(menuOrientation == VERTICAL_MENU ? "Vertical" : "Horizontal"));
+    // debug.println("Selected option: " + String(selectedOption));
+    // debug.println("Current layer: " + String(currentLayer));
   }
 
   if (speaker.isCommunicationEnabled()) {
@@ -255,9 +255,13 @@ char **Menu::updateVMenuOptions() {
       options = ledsOptions;
       optionsSize = sizeof(ledsOptions) / sizeof(ledsOptions[0]);
       break;
-    case LAYER_PAIR_MENU:
-      options = pairOptions;
-      optionsSize = sizeof(pairOptions) / sizeof(pairOptions[0]);
+    case LAYER_CONFERENCE_MENU:
+      options = conferenceOptions;
+      optionsSize = sizeof(conferenceOptions) / sizeof(conferenceOptions[0]);
+      break;
+    case LAYER_CONFERENCE_LIST:
+      options = conferenceList;
+      optionsSize = sizeof(conferenceList) / sizeof(conferenceList[0]);
       break;
     default:
       options = errorBanner;
@@ -273,7 +277,7 @@ char **Menu::updateHMenuBanner() {
   char **banner;
 
   switch (currentLayer) {
-    case LAYER_PAIRING_BANNER:
+    case LAYER_CONFERENCE_PAIRING_BANNER:
       banner = pairingBanner;
       // TODO: test with banner size
       bannerSize = sizeof(pairingBanner) / sizeof(pairingBanner[0]);
@@ -292,7 +296,7 @@ char **Menu::updateHMenuOptions() {
   char **options;
 
   switch (currentLayer) {
-    case LAYER_PAIRING_BANNER:
+    case LAYER_CONFERENCE_PAIRING_BANNER:
       options = oneOption;
       optionsSize = sizeof(oneOption) / sizeof(oneOption[0]);
       break;
@@ -387,8 +391,8 @@ void Menu::handleSelection() {
     case LAYER_LEDS_MENU:
       ledsMenu();
       break;
-    case LAYER_PAIR_MENU:
-      pairMenu();
+    case LAYER_CONFERENCE_MENU:
+      talksMenu();
       break;
     default:
       break;
@@ -402,11 +406,12 @@ void Menu::updatePreviousLayer() {
   switch (currentLayer) {
     case LAYER_MAIN_MENU:
     case LAYER_LEDS_MENU:
-    case LAYER_PAIR_MENU:
+    case LAYER_CONFERENCE_MENU:
       previousLayer = LAYER_MAIN_MENU;
       break;
-    case LAYER_PAIRING_BANNER:
-      previousLayer = LAYER_PAIR_MENU;
+    case LAYER_CONFERENCE_PAIRING_BANNER:
+    case LAYER_CONFERENCE_LIST:
+      previousLayer = LAYER_CONFERENCE_MENU;
       break;
     default:
       debug.println("Unknown layer: " + String(currentLayer));
@@ -417,7 +422,7 @@ void Menu::updatePreviousLayer() {
 
 void Menu::handleBackButton() {
   switch (currentLayer) {
-    case LAYER_PAIRING_BANNER:
+    case LAYER_CONFERENCE_PAIRING_BANNER:
       speaker.disableCommunication();
       vip.disableCommunication();
       break;
@@ -435,7 +440,7 @@ void Menu::updateOrientation() {
   debug.println("Updating orientation for layer: " + String(currentLayer));
 
   switch (currentLayer) {
-    case LAYER_PAIRING_BANNER:
+    case LAYER_CONFERENCE_PAIRING_BANNER:
       menuOrientation = HORIZONTAL_MENU;
       break;
     default:  // Most of the menus are vertical
@@ -452,8 +457,8 @@ void Menu::mainMenu() {
     case MAIN_MENU_LEDS:
       currentLayer = LAYER_LEDS_MENU;
       break;
-    case MAIN_MENU_PAIR:
-      currentLayer = LAYER_PAIR_MENU;
+    case MAIN_MENU_CONFERENCE:
+      currentLayer = LAYER_CONFERENCE_MENU;
       break;
     case MAIN_MENU_INFO:
       break;
@@ -570,20 +575,33 @@ void Menu::airTagsMenu() {
 #endif
 }
 
-void Menu::pairMenu() {
+void Menu::talksMenu() {
   switch (selectedOption) {
     case PAIR_MENU_START:
       speaker.enableCommunication();
       vip.enableCommunication();
-      currentLayer = LAYER_PAIRING_BANNER;
+      currentLayer = LAYER_CONFERENCE_PAIRING_BANNER;
       break;
-    case PAIR_MENU_CANCEL:
-      speaker.disableCommunication();
-      vip.disableCommunication();
-      currentLayer = LAYER_MAIN_MENU;
+    case PAIR_MENU_CONFERENCES:
+      fillTalksList();
+      currentLayer = LAYER_CONFERENCE_LIST;
+      break;
+    case PAIR_MENU_HELP:
       break;
     default:
       break;
+  }
+}
+
+void Menu::fillTalksList() {
+  std::vector<String> talksList = vip.getTalkList();
+  debug.println("Fill talks list");
+  // Fill conferenceList with talksList
+  for (size_t i = 0; i < talksList.size(); i++) {
+    char *talk = (char *)malloc(80);
+    sprintf(talk, "%d. %s", i + 1, talksList[i].c_str());
+    conferenceList[i] = talk;
+    debug.println("Talk: " + String(conferenceList[i]));
   }
 }
 

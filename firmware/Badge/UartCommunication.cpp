@@ -7,7 +7,7 @@ const char *validTalks[] = {
   "DevSecOps",
   "101 con Frida, para hacking mobile",
   "OSINT for Offensive Security. Top 10 herramientas más populares",
-  "100 vulnerabilidades en 30 días: Hackeando la mayor compañía de seguros del mundo",
+  "100 vulnerabilidades en 30 dias: Hackeando la mayor companía de seguros del mundo",
   "Necesitas un equipo de respuesta ante ciberataques y no sabes por dónde comenzar?",
   "Charla 8",
   "Charla 9",
@@ -58,7 +58,7 @@ void UartCommunication::updateTalkList(String talkName) {
   }
 
   if (!isValid) {
-    debug.println("Invalid talk name");
+    // debug.println("Invalid talk name");
     return;
   }
 
@@ -114,7 +114,7 @@ void UartCommunication::receiveTalkName() {
       return;
     }
 
-    debug.println("Received: " + input);
+    // debug.println("Received: " + input);
 
     // TODO: validate with a list of valid talk names
     updateTalkList(input);
@@ -132,4 +132,8 @@ void UartCommunication::disableCommunication() {
 
 bool UartCommunication::isCommunicationEnabled() {
   return this->communication;
+}
+
+std::vector<String> UartCommunication::getTalkList() {
+  return this->talkList;
 }

@@ -4,15 +4,17 @@
 enum MenuLayer {
   LAYER_MAIN_MENU = 0,
   LAYER_LEDS_MENU,
-  LAYER_PAIR_MENU,
-  LAYER_PAIRING_BANNER,
+  LAYER_CONFERENCE_MENU,
+  LAYER_CONFERENCE_PAIRING_BANNER,
+  LAYER_CONFERENCE_LIST,
+  LAYER_CONFERENCE_HELP_BANNER,
 };
 
 #if defined(RP2040)
 enum MainMenuOptions {
   MAIN_MENU_DINO = 0,
   MAIN_MENU_LEDS,
-  MAIN_MENU_PAIR,
+  MAIN_MENU_CONFERENCE,
   MAIN_MENU_INFO,
   MAIN_MENU_TERMINAL,
 };
@@ -20,7 +22,7 @@ enum MainMenuOptions {
 enum MainMenuOptions {
   MAIN_MENU_DINO = 0,
   MAIN_MENU_LEDS,
-  MAIN_MENU_PAIR,
+  MAIN_MENU_CONFERENCE,
   MAIN_MENU_INFO,
   MAIN_MENU_AIRTAG,
   MAIN_MENU_WEB_SERVER,
@@ -40,7 +42,8 @@ enum LedsMenuOptions {
 
 enum PairMenuOptions {
   PAIR_MENU_START = 0,
-  PAIR_MENU_CANCEL,
+  PAIR_MENU_CONFERENCES,
+  PAIR_MENU_HELP,
 };
 
 /************************* Banners ****************************/
@@ -64,14 +67,14 @@ char *twoOptions[] = {
 char *mainOptions[] = {
     "1. Juego",
     "2. LEDs",
-    "3. Vincular",
+    "3. Conferencias",
     "4. Informacion",
     "5. Terminal"};
 #else
 char *mainOptions[] = {
     "1. Juego",
     "2. LEDs",
-    "3. Vincular",
+    "3. Conferencias",
     "4. Informacion",
     "5. AirTag",
     "6. Servidor web"};
@@ -89,14 +92,27 @@ char *ledsOptions[] = {
     "7. Cyan",
     "8. Blanco"};
 
-/************************ Pair menu ***************************/
+/********************* Conference menu ************************/
 
-char *pairOptions[] = {
-    "1. Iniciar",
-    "2. Cancelar"};
+char *conferenceOptions[] = {
+    "1. Vincular",
+    "2. Ver conferencias",
+    "3. Ayuda"};
 
 char *pairingBanner[] = {
     "",
     "   Vinculando..."};
+
+char *pairingSuccessBanner[] = {
+    "Nueva conferencia",
+    "   agregada"};
+
+char *conferenceHelpBanner[] = {
+    " Debes conectarte",
+    "   a un speaker",
+    " mediante serial"};
+
+char *conferenceList[100] = {
+    "Conferencias"};
 
 #endif

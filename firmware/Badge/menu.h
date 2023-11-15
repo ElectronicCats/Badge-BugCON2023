@@ -113,7 +113,8 @@ class Menu {
   void ledsMenu();
   void ledsOff();
   void airTagsMenu();
-  void pairMenu();
+  void talksMenu();
+  void fillTalksList();
   // Dino Game
   void gameSetup();
   void introMessage();

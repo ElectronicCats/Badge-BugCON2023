@@ -26,6 +26,7 @@ class UartCommunication {
   void enableCommunication();
   void disableCommunication();
   bool isCommunicationEnabled();
+  std::vector<String> getTalkList();
 };
 
 #endif
