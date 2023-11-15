@@ -27,6 +27,14 @@ void Debug::disable() {
 void Debug::waitForSerialConnection() {
 	while (!Serial)
 		;
+
+#if defined(ESP32)
+  for (int i = 0; i < 10; i++) {
+    Serial.print(".");
+    delay(200);
+  }
+  Serial.println();
+#endif
 }
 
 void Debug::print(String message) {

@@ -13,6 +13,7 @@
 #include "ezTouch.h"
 #include "hardware.h"
 #include "AirTag.h"
+#include "UartCommunication.h"
 
 #define SCREEN_WIDTH 128  // OLED display width, in pixels
 #define SCREEN_HEIGHT 32  // OLED display height, in pixels
@@ -86,6 +87,8 @@ class Menu {
   Airtag airTag;
 #endif
   Debug debug;
+  UartCommunication speaker;
+  UartCommunication vip;
   uint8_t selectedOption;
   uint8_t previousLayer;
   uint8_t currentLayer;

@@ -22,8 +22,14 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  debug.waitForSerialConnection();
+  // debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
+  speaker.setTalkName("Nombre de la charla");
+  debug.println("ID: " + String(speaker.getID()));
+
+#if defined(ESP32)
+  debug.disable();  // Uncomment to test serial communication
+#endif
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
   debug.println("Touch left pin: " + String(TOUCH_LEFT));
@@ -81,8 +87,8 @@ void Menu::scanKeys() {
   static unsigned long lastDebugPrint = 0;
   if (millis() - lastDebugPrint > 1000) {
     lastDebugPrint = millis();
-    debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
-    debug.println("Right button state: " + String(buttonRight.getStateRaw()));
+    // debug.println("Left button state: " + String(buttonLeft.getStateRaw()));
+    // debug.println("Right button state: " + String(buttonRight.getStateRaw()));
   }
 
   animateLeftLongPress(leftLongClickDetected);
@@ -144,16 +150,18 @@ void Menu::scanKeys() {
 
     showVMenu();
   }
-
-#if defined(ESP32_DEVKIT) || defined(ESP32_S3)
-  if (currentLayer == LAYER_AIRTAG_MENU) {
-    airTag.loop();
-  }
-#endif
 }
 
 void Menu::loop() {
   scanKeys();
+
+  if (speaker.isCommunicationEnabled()) {
+    speaker.sendTalkName();
+  }
+
+  if (vip.isCommunicationEnabled()) {
+    vip.receiveTalkName();
+  }
 }
 
 void Menu::showVMenu() {
@@ -193,6 +201,10 @@ char **Menu::updateVMenuOptions() {
     case LAYER_LEDS_MENU:
       options = ledsOptions;
       optionsSize = sizeof(ledsOptions) / sizeof(ledsOptions[0]);
+      break;
+    case LAYER_PAIR_MENU:
+      options = pairOptions;
+      optionsSize = sizeof(pairOptions) / sizeof(pairOptions[0]);
       break;
     default:
       options = mainOptions;
@@ -285,8 +297,9 @@ void Menu::handleSelection() {
     case LAYER_LEDS_MENU:
       ledsMenu();
       break;
-    case LAYER_AIRTAG_MENU:
-      airTagsMenu();
+    case LAYER_PAIR_MENU:
+      speaker.enableCommunication();
+      vip.enableCommunication();
       break;
     default:
       break;
@@ -299,7 +312,7 @@ void Menu::updatePreviousLayer() {
   switch (currentLayer) {
     case LAYER_MAIN_MENU:
     case LAYER_LEDS_MENU:
-    case LAYER_AIRTAG_MENU:
+    case LAYER_PAIR_MENU:
       previousLayer = LAYER_MAIN_MENU;
       break;
     default:
@@ -312,6 +325,8 @@ void Menu::updatePreviousLayer() {
 void Menu::handleBackButton() {
   currentLayer = previousLayer;
   selectedOption = 0;
+  speaker.disableCommunication();
+  vip.disableCommunication();
   // TODO: update orientation
   showMenu();
 }
@@ -325,6 +340,7 @@ void Menu::mainMenu() {
       currentLayer = LAYER_LEDS_MENU;
       break;
     case MAIN_MENU_PAIR:
+      currentLayer = LAYER_PAIR_MENU;
       break;
     case MAIN_MENU_INFO:
       break;
@@ -333,7 +349,6 @@ void Menu::mainMenu() {
       break;
 #else
     case MAIN_MENU_AIRTAG:
-      currentLayer = LAYER_AIRTAG_MENU;
       airTagsMenu();
       break;
     case MAIN_MENU_WEB_SERVER:

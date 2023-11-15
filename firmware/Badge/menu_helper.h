@@ -4,7 +4,7 @@
 enum MenuLayer {
   LAYER_MAIN_MENU = 0,
   LAYER_LEDS_MENU,
-  LAYER_AIRTAG_MENU,
+  LAYER_PAIR_MENU,
 };
 
 #if defined(RP2040)
@@ -37,6 +37,11 @@ enum LedsMenuOptions {
   LEDS_MENU_WHITE,
 };
 
+enum PairMenuOptions {
+  PAIR_MENU_START = 0,
+  PAIR_MENU_CANCEL,
+};
+
 /************************ Main menu ***************************/
 
 #if defined(RP2040)
@@ -67,5 +72,11 @@ char *ledsOptions[] = {
     "6. Rosa",
     "7. Cyan",
     "8. Blanco"};
+
+/************************ Pair menu ***************************/
+
+char *pairOptions[] = {
+    "1. Iniciar",
+    "2. Cancelar"};
 
 #endif
