@@ -19,7 +19,7 @@ class UartCommunication {
 
  public:
   UartCommunication();
-  void setTalkName(String talkName);
+  void setTalk(uint8_t index);
   String getID();
   void sendTalkName();
   void receiveTalkName();

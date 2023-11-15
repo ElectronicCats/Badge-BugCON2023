@@ -8,6 +8,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <ezButton.h>
+#include <cmath>
 
 #include "Debug.h"
 #include "ezTouch.h"
@@ -27,6 +28,7 @@
 #define BLACK 0
 #define VERTICAL_MENU 0
 #define HORIZONTAL_MENU 1
+#define CHARS_PER_LINE 21
 
 /* Dino Game */
 #define DINO_WIDTH 25
@@ -95,6 +97,7 @@ class Menu {
   uint8_t optionsSize;
   uint8_t bannerSize;
   uint8_t menuOrientation;
+  uint16_t talkLineIndex;
   Adafruit_NeoPixel pixels;
   void scanKeys();
   void showVMenu();

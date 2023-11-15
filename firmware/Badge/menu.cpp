@@ -14,6 +14,7 @@ Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET),
                pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800) {}
 
 void Menu::begin() {
+  talkLineIndex = 0;
   pixels.begin();
   ledsOff();
 #if defined(ESP32_S3)
@@ -24,7 +25,7 @@ void Menu::begin() {
   debug.begin(9600);
   // debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalkName("Cloud Security - The Blue Team Way");
+  speaker.setTalk(1);  // Value from 0 to 34, check UartCommunication.cpp
   debug.println("ID: " + String(speaker.getID()));
 
 #if defined(ESP32)
@@ -261,7 +262,8 @@ char **Menu::updateVMenuOptions() {
       break;
     case LAYER_CONFERENCE_LIST:
       options = conferenceList;
-      optionsSize = sizeof(conferenceList) / sizeof(conferenceList[0]);
+      // optionsSize = sizeof(conferenceList) / sizeof(conferenceList[0]);
+      optionsSize = talkLineIndex + 1;
       break;
     default:
       options = errorBanner;
@@ -279,7 +281,6 @@ char **Menu::updateHMenuBanner() {
   switch (currentLayer) {
     case LAYER_CONFERENCE_PAIRING_BANNER:
       banner = pairingBanner;
-      // TODO: test with banner size
       bannerSize = sizeof(pairingBanner) / sizeof(pairingBanner[0]);
       break;
     default:
@@ -595,14 +596,51 @@ void Menu::talksMenu() {
 
 void Menu::fillTalksList() {
   std::vector<String> talksList = vip.getTalkList();
-  debug.println("Fill talks list");
+  debug.println("Talk list size: " + String(talksList.size()));
+  static uint8_t previousTalkListSize = 0;
+
+  if (talksList.size() == previousTalkListSize) return;
+
+  previousTalkListSize = talksList.size();
+
   // Fill conferenceList with talksList
-  for (size_t i = 0; i < talksList.size(); i++) {
-    char *talk = (char *)malloc(80);
-    sprintf(talk, "%d. %s", i + 1, talksList[i].c_str());
-    conferenceList[i] = talk;
-    debug.println("Talk: " + String(conferenceList[i]));
+  size_t i = talksList.size() - 1;  // Start from the last talk
+  for (i = i; i < talksList.size(); i++) {
+    uint8_t chunksNumber = ceil(static_cast<float>(talksList[i].length()) / CHARS_PER_LINE);
+    debug.println("Chunks number: " + String(chunksNumber));
+    debug.println("talk size: " + String(talksList[i].length()));
+
+    if (chunksNumber == 1) {
+      char *talkLine = (char *)malloc(150);
+      sprintf(talkLine, "%d. %s", i + 1, talksList[i].c_str());
+      conferenceList[talkLineIndex] = talkLine;
+      debug.println("Talk: " + String(conferenceList[talkLineIndex]));
+      continue;
+    }
+
+    // Get first line
+    char *firstLine = (char *)malloc(150);
+    sprintf(firstLine, "%d. %s", i + 1, talksList[i].substring(0, CHARS_PER_LINE - 3).c_str());
+    conferenceList[talkLineIndex] = firstLine;
+
+    // Get remaining lines
+    for (size_t j = 1; j < chunksNumber; j++) {
+      talkLineIndex++;
+      char *talkLine = (char *)malloc(150);
+      uint8_t from = j * CHARS_PER_LINE - 3;
+      uint8_t to = j * CHARS_PER_LINE + CHARS_PER_LINE - 3;
+      debug.println("From: " + String(from));
+      debug.println("To: " + String(to));
+      to = to > talksList[i].length() ? talksList[i].length() : to;
+
+      sprintf(talkLine, "%s", talksList[i].substring(from, to).c_str());
+      conferenceList[talkLineIndex] = talkLine;
+      debug.println("Talk: " + String(conferenceList[talkLineIndex]));
+    }
   }
+
+  debug.println("talkLineIndex: " + String(talkLineIndex));
+  talkLineIndex += 2;
 }
 
 /**
