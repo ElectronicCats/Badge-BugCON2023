@@ -25,7 +25,7 @@ void Menu::begin() {
   debug.begin(9600);
   // debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(1);  // Value from 0 to 34, check UartCommunication.cpp
+  speaker.setTalk(17);  // Value from 0 to 34, check UartCommunication.cpp
   debug.println("ID: " + String(speaker.getID()));
 
 #if defined(ESP32)
@@ -283,6 +283,10 @@ char **Menu::updateHMenuBanner() {
       banner = pairingBanner;
       bannerSize = sizeof(pairingBanner) / sizeof(pairingBanner[0]);
       break;
+    case LAYER_CONFERENCE_HELP_BANNER:
+      banner = conferenceHelpBanner;
+      bannerSize = sizeof(conferenceHelpBanner) / sizeof(conferenceHelpBanner[0]);
+      break;
     default:
       banner = errorBanner;
       bannerSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
@@ -298,6 +302,10 @@ char **Menu::updateHMenuOptions() {
 
   switch (currentLayer) {
     case LAYER_CONFERENCE_PAIRING_BANNER:
+      options = oneOption;
+      optionsSize = 0;  // Don't show options
+      break;
+    case LAYER_CONFERENCE_HELP_BANNER:
       options = oneOption;
       optionsSize = sizeof(oneOption) / sizeof(oneOption[0]);
       break;
@@ -395,10 +403,14 @@ void Menu::handleSelection() {
     case LAYER_CONFERENCE_MENU:
       talksMenu();
       break;
+    case LAYER_CONFERENCE_HELP_BANNER:
+      conferenceHelp();
+      break;
     default:
       break;
   }
 
+  selectedOption = 0;
   updateOrientation();
   showMenu();
 }
@@ -412,6 +424,7 @@ void Menu::updatePreviousLayer() {
       break;
     case LAYER_CONFERENCE_PAIRING_BANNER:
     case LAYER_CONFERENCE_LIST:
+    case LAYER_CONFERENCE_HELP_BANNER:
       previousLayer = LAYER_CONFERENCE_MENU;
       break;
     default:
@@ -442,6 +455,7 @@ void Menu::updateOrientation() {
 
   switch (currentLayer) {
     case LAYER_CONFERENCE_PAIRING_BANNER:
+    case LAYER_CONFERENCE_HELP_BANNER:
       menuOrientation = HORIZONTAL_MENU;
       break;
     default:  // Most of the menus are vertical
@@ -588,6 +602,17 @@ void Menu::talksMenu() {
       currentLayer = LAYER_CONFERENCE_LIST;
       break;
     case PAIR_MENU_HELP:
+      currentLayer = LAYER_CONFERENCE_HELP_BANNER;
+      break;
+    default:
+      break;
+  }
+}
+
+void Menu::conferenceHelp() {
+  switch (selectedOption) {
+    case OK:
+      currentLayer = LAYER_CONFERENCE_MENU;
       break;
     default:
       break;

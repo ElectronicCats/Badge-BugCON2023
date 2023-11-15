@@ -29,6 +29,8 @@
 #define VERTICAL_MENU 0
 #define HORIZONTAL_MENU 1
 #define CHARS_PER_LINE 21
+#define OK 0
+#define CANCEL 1
 
 /* Dino Game */
 #define DINO_WIDTH 25
@@ -117,6 +119,7 @@ class Menu {
   void ledsOff();
   void airTagsMenu();
   void talksMenu();
+  void conferenceHelp();
   void fillTalksList();
   // Dino Game
   void gameSetup();

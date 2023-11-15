@@ -40,11 +40,19 @@ enum LedsMenuOptions {
   LEDS_MENU_WHITE,
 };
 
+#if defined(RP2040)
 enum PairMenuOptions {
   PAIR_MENU_START = 0,
   PAIR_MENU_CONFERENCES,
   PAIR_MENU_HELP,
 };
+#else
+enum PairMenuOptions {
+  PAIR_MENU_START = 0,
+  PAIR_MENU_HELP,
+};
+#define PAIR_MENU_CONFERENCES -1
+#endif
 
 /************************* Banners ****************************/
 
@@ -94,23 +102,36 @@ char *ledsOptions[] = {
 
 /********************* Conference menu ************************/
 
+#if defined(RP2040)
 char *conferenceOptions[] = {
     "1. Vincular",
     "2. Ver conferencias",
     "3. Ayuda"};
+#else
+char *conferenceOptions[] = {
+    "1. Vincular",
+    "2. Ayuda"};
+#endif
 
 char *pairingBanner[] = {
     "",
     "   Vinculando..."};
 
 char *pairingSuccessBanner[] = {
-    "Nueva conferencia",
-    "   agregada"};
+    "  Nueva conferencia  ",
+    "    agregada"};
 
+#if defined(RP2040)
 char *conferenceHelpBanner[] = {
-    " Debes conectarte",
-    "   a un speaker",
-    " mediante serial"};
+    "   Debes conectarte  ",
+    "     a un speaker",
+    "   mediante serial"};
+#else
+char *conferenceHelpBanner[] = {
+    "   Debes conectarte  ",
+    "      a un VIP",
+    "   mediante serial"};
+#endif
 
 char *conferenceList[100] = {
     "Conferencias"};
