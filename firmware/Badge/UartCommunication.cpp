@@ -99,7 +99,7 @@ void UartCommunication::sendTalkName() {
   static unsigned long lastTime = millis();
 
   if (millis() - lastTime > 1000) {
-    Serial.println(this->talkName);
+    Serial2.println(this->talkName);
     lastTime = millis();
   }
 #endif

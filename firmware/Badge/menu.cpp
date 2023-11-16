@@ -25,7 +25,7 @@ void Menu::begin() {
   debug.begin(9600);
   debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(17);  // Value from 0 to 34, check UartCommunication.cpp
+  speaker.setTalk(8);  // Value from 0 to 34, check UartCommunication.cpp
   debug.println("ID: " + String(speaker.getID()));
 
 #if defined(ESP32)

@@ -4,6 +4,11 @@
 UART Serial2(8, 9, NC, NC);  // TX, RX, RTS, CTS
 #endif
 
+#ifdef ESP32_S3
+#define TXD2 43
+#define RXD2 44
+#endif
+
 Debug::Debug() {
   isEnable = false;
 }
@@ -13,6 +18,11 @@ void Debug::begin(int baudRate) {
 #ifdef RP2040
   Serial2.begin(baudRate);
 #endif
+
+#ifdef ESP32_S3
+  Serial2.begin(baudRate, SERIAL_8N1, RXD2, TXD2);
+#endif
+
   enable();
 }
 
