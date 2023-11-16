@@ -19,6 +19,8 @@ Install the following libraries:
 - [Adafruit NeoPixel](https://www.arduino.cc/reference/en/libraries/adafruit-neopixel/)
 - [Adafruit SSD1306](https://www.arduino.cc/reference/en/libraries/adafruit-ssd1306/)
 - [ezButton](https://www.arduino.cc/reference/en/libraries/ezbutton/)
+- [ArduinoUniqueID](https://www.arduino.cc/reference/en/libraries/arduinouniqueid/)
+- [Adafruit SH110X](https://www.arduino.cc/reference/en/libraries/adafruit-sh110x/)
 
 > You can install these libraries using the Arduino IDE Library Manager (Sketch > Include Library > Manage Libraries...).
 
@@ -31,8 +33,10 @@ Adafruit BusIO       1.14.3
 Wire
 SPI
 Adafruit NeoPixel    1.11.0
+Adafruit SH110X      2.1.8
 Adafruit SSD1306     2.5.7
 ezButton             1.0.4
+ArduinoUniqueID      1.3.0
 ```
 
 > You can use latest versions of these libraries.
@@ -100,11 +104,14 @@ You need to fix the following error by commenting out the following line in `Ada
 
 ### Production
 
-In `Menu.h` change the following lines:
+In `hardware.h` change the following lines:
 
 ```cpp
 // #define BUTTON_RIGHT 26  // GPIO26 -> For development in Raspberry Pi Pico
 #define BUTTON_RIGHT 25  // GPIO25 -> For production in BugCON badge
+
+// #define NEOPIXELS_PIN 16  // GPIO23 -> For development in Raspberry Pi Pico
+#define NEOPIXELS_PIN 23  // For production in BugCON badge
 ```
 
 Generate binaries for each board:
@@ -116,6 +123,18 @@ make compile BOARD=rp2040
 ```bash
 make compile BOARD=esp32s3
 ```
+
+Compile and flash the binaries to the boards:
+
+```bash
+make all BOARD=rp2040
+```
+
+```bash
+make all BOARD=esp32s3
+```
+
+> Note: Make sure you have the correct port selected in `Makefile` for each board.
  
 ## Maintainer
 
