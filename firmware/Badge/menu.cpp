@@ -69,6 +69,7 @@ void Menu::begin() {
   display.display();
   delay(2000);  // Pause for 2 seconds
   showVMenu();
+  fillTalksList();
 }
 
 void Menu::scanKeys() {
@@ -650,7 +651,7 @@ void Menu::conferenceSuccess() {
 
 void Menu::fillTalksList() {
   std::vector<String> talksList = vip.getTalkList();
-  // debug.println("Talk list size: " + String(talksList.size()));
+  debug.println("Talk list size: " + String(talksList.size()));
   static uint8_t previousTalkListSize = 0;
 
   if (talksList.size() == previousTalkListSize) return;
@@ -660,7 +661,8 @@ void Menu::fillTalksList() {
   // Fill conferenceList with talksList
   // size_t i = talksList.size() - 1;  // Start from the last talk
   size_t i = 0;  // Start from the first talk
-  talkLineIndex = 0;
+  // talkLineIndex = 0;
+  uint8_t lineIndex = 0;
   for (i = i; i < talksList.size(); i++) {
     uint8_t chunksNumber = ceil(static_cast<float>(talksList[i].length()) / CHARS_PER_LINE);
     // debug.println("Chunks number: " + String(chunksNumber));
@@ -669,19 +671,23 @@ void Menu::fillTalksList() {
     if (chunksNumber == 1) {
       char *talkLine = (char *)malloc(150);
       sprintf(talkLine, "%d. %s", i + 1, talksList[i].c_str());
-      conferenceList[talkLineIndex] = talkLine;
-      // debug.println("Talk: " + String(conferenceList[talkLineIndex]));
+      conferenceList[lineIndex] = talkLine;
+      debug.println("Talk: " + String(i + 1) + String(conferenceList[lineIndex]));
+      talkLineIndex += 2;
+      lineIndex += 2;
       continue;
     }
 
     // Get first line
     char *firstLine = (char *)malloc(150);
     sprintf(firstLine, "%d. %s", i + 1, talksList[i].substring(0, CHARS_PER_LINE - 3).c_str());
-    conferenceList[talkLineIndex] = firstLine;
+    conferenceList[lineIndex] = firstLine;
+    debug.println("Talk: " + String(conferenceList[lineIndex]));
 
     // Get remaining lines
     for (size_t j = 1; j < chunksNumber; j++) {
       talkLineIndex++;
+      lineIndex++;
       char *talkLine = (char *)malloc(150);
       uint8_t from = j * CHARS_PER_LINE - 3;
       uint8_t to = j * CHARS_PER_LINE + CHARS_PER_LINE - 3;
@@ -690,11 +696,18 @@ void Menu::fillTalksList() {
       to = to > talksList[i].length() ? talksList[i].length() : to;
 
       sprintf(talkLine, "%s", talksList[i].substring(from, to).c_str());
-      conferenceList[talkLineIndex] = talkLine;
-      // debug.println("Talk: " + String(conferenceList[talkLineIndex]));
+      conferenceList[lineIndex] = talkLine;
+      debug.println("Talk: " + String(conferenceList[lineIndex]));
     }
 
     talkLineIndex += 2;
+    lineIndex += 2;
+  }
+
+  // Print conferenceList
+  debug.println("Conference list:");
+  for (size_t i = 0; i < talkLineIndex; i++) {
+    debug.println("Talk: " + String(conferenceList[i]));
   }
 }
 

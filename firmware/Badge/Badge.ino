@@ -24,14 +24,20 @@
   please buy us a round!
   Distributed as-is; no warranty is given.
 ***********************************************************************************/
-#include "Menu.h"
+#include "menu.h"
 
 Menu menu;
 
 void setup() {
   menu.begin();
+#ifdef RP2040
+  // terminalSetup();
+#endif
 }
 
 void loop() {
   menu.loop();
+#ifdef RP2040
+  // terminalLoop();
+#endif
 }

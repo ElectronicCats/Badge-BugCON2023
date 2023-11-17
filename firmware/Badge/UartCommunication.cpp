@@ -28,7 +28,7 @@ const char *validTalks[] = {
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
     "Tales From a Cloud CSIRT- Lets deep    dive into a          Kubernetes (k8s)     Infection            - Santiago Abastante",  // 7
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
-    "Como probar       nuestro plan de      respuesta a          incidentes de manera eficaz? - Julio César Muñoz Hernández",  // 8
+    "Como probar       nuestro plan de      respuesta a          incidentes de manera eficaz? - Julio Cesar Munoz Hernandez",  // 8
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
     "Brute Forcing and Destroy with IA      - Debug Sec",  // 9
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
@@ -68,7 +68,7 @@ const char *validTalks[] = {
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
     "Hacking etico     potenciado por       inteligencia         artificial: El       matrimonio perfecto  - Raul Aguilera      Andrade / Luis Daniel Aguirre Cueva",  // 27
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
-    "Cómo hacer        ciberseguridad       Aplicando            Inteligencia         Artificial           - Pablo Corona"};  // 28
+    "Como hacer        ciberseguridad       Aplicando            Inteligencia         Artificial           - Pablo Corona"};  // 28
 
 UartCommunication::UartCommunication() {
   this->communication = false;
@@ -123,10 +123,12 @@ void UartCommunication::begin() {
   }
 
   // Reset talks counter and talks order
-  // talksCounter = 0;
-  // eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
-  // memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
-  // eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
+  {
+    // talksCounter = 0;
+    // eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
+    // memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
+    // eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
+  }
 #endif
 }
 

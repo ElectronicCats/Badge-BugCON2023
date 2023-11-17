@@ -10,7 +10,7 @@
 #include <ezButton.h>
 #include <cmath>
 
-#include "Debug.h"
+#include "debug.h"
 #include "ezTouch.h"
 #include "hardware.h"
 #include "AirTag.h"
