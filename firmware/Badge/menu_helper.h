@@ -134,7 +134,7 @@ char *conferenceHelpBanner[] = {
     "   mediante serial"};
 #endif
 
-char *conferenceList[100] = {
+char *conferenceList[500] = {
     "  Las conferencias   ",
     "   apareceran aqui   "};
 

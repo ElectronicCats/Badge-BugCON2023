@@ -62,7 +62,7 @@ void Menu::begin() {
   debug.begin(9600);
   debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(0);  // Value from 0 to 28, check UartCommunication.cpp
+  speaker.setTalk(28);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
   debug.println("ID: " + String(speaker.getID()));
 
@@ -309,7 +309,7 @@ char **Menu::updateVMenuOptions() {
     case LAYER_CONFERENCE_LIST:
       fillTalksList();
       options = conferenceList;
-      optionsSize = talkLineIndex + 1;
+      optionsSize = sizeof(conferenceList) / sizeof(conferenceList[0]);
       break;
     default:
       options = errorBanner;
@@ -689,7 +689,7 @@ void Menu::conferenceSuccess() {
 
 void Menu::fillTalksList() {
   std::vector<String> talksList = vip.getTalkList();
-  debug.println("Talk list size: " + String(talksList.size()));
+  // debug.println("Talk list size: " + String(talksList.size()));
   static uint8_t previousTalkListSize = 0;
 
   if (talksList.size() == previousTalkListSize) return;

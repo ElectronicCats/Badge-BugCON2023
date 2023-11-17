@@ -74,7 +74,7 @@ UartCommunication::UartCommunication() {
   this->communication = false;
   this->receivedSuccess = false;
   this->talksCounter = 0;
-  debug.enable();
+  // debug.enable();
 }
 
 void UartCommunication::begin() {
