@@ -114,6 +114,24 @@ In `hardware.h` change the following lines:
 #define NEOPIXELS_PIN 23  // For production in BugCON badge
 ```
 
+If `MININO` is defined, commented out:
+
+```cpp
+#ifdef USB_VID
+    #define BOARD_NAME "ESP32-S3"
+    #define ESP32_S3
+    // #define MININO
+#else
+```
+
+Disable waiting for serial port in `menu.cpp` in `begin()` function:
+
+```cpp
+debug.waitForSerialConnection();
+```
+
+### Compile and flash
+
 Generate binaries for each board:
 
 ```bash
