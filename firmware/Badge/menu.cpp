@@ -25,13 +25,9 @@ void Menu::begin() {
   debug.begin(9600);
   debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(14);  // Value from 0 to 28, check UartCommunication.cpp
+  speaker.setTalk(0);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
   debug.println("ID: " + String(speaker.getID()));
-
-#if defined(ESP32)
-  // debug.disable();  // Uncomment to test serial communication
-#endif
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
   debug.println("Touch left pin: " + String(TOUCH_LEFT));
@@ -662,7 +658,9 @@ void Menu::fillTalksList() {
   previousTalkListSize = talksList.size();
 
   // Fill conferenceList with talksList
-  size_t i = talksList.size() - 1;  // Start from the last talk
+  // size_t i = talksList.size() - 1;  // Start from the last talk
+  size_t i = 0;  // Start from the first talk
+  talkLineIndex = 0;
   for (i = i; i < talksList.size(); i++) {
     uint8_t chunksNumber = ceil(static_cast<float>(talksList[i].length()) / CHARS_PER_LINE);
     // debug.println("Chunks number: " + String(chunksNumber));
@@ -695,10 +693,9 @@ void Menu::fillTalksList() {
       conferenceList[talkLineIndex] = talkLine;
       // debug.println("Talk: " + String(conferenceList[talkLineIndex]));
     }
-  }
 
-  debug.println("talkLineIndex: " + String(talkLineIndex));
-  talkLineIndex += 2;
+    talkLineIndex += 2;
+  }
 }
 
 /**
