@@ -25,7 +25,8 @@ void Menu::begin() {
   debug.begin(9600);
   debug.waitForSerialConnection();
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(23);  // Value from 0 to 28, check UartCommunication.cpp
+  speaker.setTalk(14);  // Value from 0 to 28, check UartCommunication.cpp
+  vip.begin();
   debug.println("ID: " + String(speaker.getID()));
 
 #if defined(ESP32)
@@ -653,7 +654,7 @@ void Menu::conferenceSuccess() {
 
 void Menu::fillTalksList() {
   std::vector<String> talksList = vip.getTalkList();
-  debug.println("Talk list size: " + String(talksList.size()));
+  // debug.println("Talk list size: " + String(talksList.size()));
   static uint8_t previousTalkListSize = 0;
 
   if (talksList.size() == previousTalkListSize) return;
@@ -664,14 +665,14 @@ void Menu::fillTalksList() {
   size_t i = talksList.size() - 1;  // Start from the last talk
   for (i = i; i < talksList.size(); i++) {
     uint8_t chunksNumber = ceil(static_cast<float>(talksList[i].length()) / CHARS_PER_LINE);
-    debug.println("Chunks number: " + String(chunksNumber));
-    debug.println("talk size: " + String(talksList[i].length()));
+    // debug.println("Chunks number: " + String(chunksNumber));
+    // debug.println("talk size: " + String(talksList[i].length()));
 
     if (chunksNumber == 1) {
       char *talkLine = (char *)malloc(150);
       sprintf(talkLine, "%d. %s", i + 1, talksList[i].c_str());
       conferenceList[talkLineIndex] = talkLine;
-      debug.println("Talk: " + String(conferenceList[talkLineIndex]));
+      // debug.println("Talk: " + String(conferenceList[talkLineIndex]));
       continue;
     }
 
@@ -686,13 +687,13 @@ void Menu::fillTalksList() {
       char *talkLine = (char *)malloc(150);
       uint8_t from = j * CHARS_PER_LINE - 3;
       uint8_t to = j * CHARS_PER_LINE + CHARS_PER_LINE - 3;
-      debug.println("From: " + String(from));
-      debug.println("To: " + String(to));
+      // debug.println("From: " + String(from));
+      // debug.println("To: " + String(to));
       to = to > talksList[i].length() ? talksList[i].length() : to;
 
       sprintf(talkLine, "%s", talksList[i].substring(from, to).c_str());
       conferenceList[talkLineIndex] = talkLine;
-      debug.println("Talk: " + String(conferenceList[talkLineIndex]));
+      // debug.println("Talk: " + String(conferenceList[talkLineIndex]));
     }
   }
 
