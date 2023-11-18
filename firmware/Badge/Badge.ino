@@ -31,13 +31,13 @@ Menu menu;
 void setup() {
   menu.begin();
 #ifdef RP2040
-  // terminalSetup();
+  terminalSetup();
 #endif
 }
 
 void loop() {
   menu.loop();
 #ifdef RP2040
-  // terminalLoop();
+  terminalLoop();
 #endif
 }
