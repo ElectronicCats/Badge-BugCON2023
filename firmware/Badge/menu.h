@@ -90,6 +90,7 @@ class Menu {
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
   Airtag airTag;
 #endif
+  bool terminalEnabled;
   Debug debug;
   UartCommunication speaker;
   UartCommunication vip;
@@ -121,6 +122,7 @@ class Menu {
   void conferenceHelp();
   void conferenceSuccess();
   void fillTalksList();
+  void enableTerminal();
   // Dino Game
   void gameSetup();
   void introMessage();
@@ -136,6 +138,8 @@ class Menu {
   Adafruit_NeoPixel pixels;
   void begin();
   void loop();
+  bool isTerminalEnabled();
+  void disableTerminal();
 };
 
 #endif

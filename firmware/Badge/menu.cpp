@@ -51,7 +51,8 @@ Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET),
                pixels(NUMPIXELS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800) {}
 
 void Menu::begin() {
-  talkLineIndex = 0;
+  this->talkLineIndex = 0;
+  this->terminalEnabled = false;
   pixels.begin();
   ledsOff();
 #if defined(ESP32_S3)
@@ -226,6 +227,15 @@ void Menu::loop() {
     updateOrientation();
     showMenu();
   }
+
+  // If currentLayer is LAYER_TERMINAL, then enable terminal after 1 second
+  if (currentLayer == LAYER_TERMINAL) {
+    static unsigned long lastTime = millis();
+    if (millis() - lastTime > 1000) {
+      lastTime = millis();
+      enableTerminal();
+    }
+  }
 }
 
 void Menu::showVMenu() {
@@ -351,6 +361,10 @@ char **Menu::updateHMenuBanner() {
       banner = pairingSuccessBanner;
       bannerSize = sizeof(pairingSuccessBanner) / sizeof(pairingSuccessBanner[0]);
       break;
+    case LAYER_TERMINAL:
+      banner = terminalBanner;
+      bannerSize = sizeof(terminalBanner) / sizeof(terminalBanner[0]);
+      break;
     default:
       banner = errorBanner;
       bannerSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
@@ -366,6 +380,7 @@ char **Menu::updateHMenuOptions() {
 
   switch (currentLayer) {
     case LAYER_CONFERENCE_PAIRING_BANNER:
+    case LAYER_TERMINAL:
       options = oneOption;
       optionsSize = 0;  // Don't show options
       break;
@@ -488,6 +503,7 @@ void Menu::updatePreviousLayer() {
     case LAYER_MAIN_MENU:
     case LAYER_LEDS_MENU:
     case LAYER_CONFERENCE_MENU:
+    case LAYER_TERMINAL:
       previousLayer = LAYER_MAIN_MENU;
       break;
     case LAYER_CONFERENCE_PAIRING_BANNER:
@@ -512,6 +528,9 @@ void Menu::handleBackButton() {
       speaker.disableCommunication();
       vip.disableCommunication();
       break;
+    case LAYER_TERMINAL:
+      disableTerminal();
+      break;
     default:
       break;
   }
@@ -529,6 +548,7 @@ void Menu::updateOrientation() {
     case LAYER_CONFERENCE_PAIRING_BANNER:
     case LAYER_CONFERENCE_HELP_BANNER:
     case LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER:
+    case LAYER_TERMINAL:
       menuOrientation = HORIZONTAL_MENU;
       break;
     default:  // Most of the menus are vertical
@@ -552,6 +572,7 @@ void Menu::mainMenu() {
       break;
 #if defined(RP2040)
     case MAIN_MENU_TERMINAL:
+      currentLayer = LAYER_TERMINAL;
       break;
 #else
     case MAIN_MENU_AIRTAG:
@@ -761,6 +782,18 @@ void Menu::fillTalksList() {
   for (size_t i = 0; i < talkLineIndex; i++) {
     debug.println("Talk: " + String(conferenceList[i]));
   }
+}
+
+bool Menu::isTerminalEnabled() {
+  return this->terminalEnabled;
+}
+
+void Menu::enableTerminal() {
+  this->terminalEnabled = true;
+}
+
+void Menu::disableTerminal() {
+  this->terminalEnabled = false;
 }
 
 /**

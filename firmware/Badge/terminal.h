@@ -56,7 +56,7 @@ int FS_index = 0;
 
 String FS[4][4] = {
     {"bugcon/ ", "herramientas/ ", "", ""},  // FS[0] = Root
-    {"leds ", "decibelimetro ", "", ""},     // FS[1] = /juegos
+    {"leds ", " ", "", ""},                  // FS[1] = /juegos
     {"luz ", "", "", ""},                    // FS[2] = /BUGCON        "luz ", "escucha ", "cantar", ""
     {" ", "", "", ""}                        // FS[3] = /curiosidades
 };
@@ -81,7 +81,6 @@ int16_t processSerialNumber(void);
 int8_t processSerialCommand(void);
 void printIndexFS(int index);
 bool sendHIDInfo();
-
 
 // HID report descriptor using TinyUSB's template
 // uint8_t const desc_hid_report[] =
@@ -151,6 +150,12 @@ void terminalSetup() {
 
 void terminalLoop() {
   for (;;) {
+    // if BUTTON_LEFT is pressed, exit
+    if (!digitalRead(BUTTON_LEFT)) {
+      Serial.println("Saliendo...");
+      break;
+    }
+
     command = processSerialCommand();  // Evalua que comandos se ejecutan
     if (command > 0) {
       Serial.println("Command: " + String(command));
@@ -314,7 +319,7 @@ void terminalLoop() {
           break;
         case CM_HLP:
           Serial.println("#   ");
-          Serial.println("#   bash_completion - programmable completion functions for bash Electronic Cats v0.5 Alpha");
+          Serial.println("#   bash_completion - programmable completion functions for bash Electronic Cats v0.6 Alpha");
           Serial.println("#   BASH_COMPLETION_VERSINFO=(0 02)");
           Serial.println("#   Microcontroller Terminal Emulator");
           Serial.println("#   For Bug CON 2023");  // Add another
@@ -336,13 +341,13 @@ void terminalLoop() {
 }
 
 void reset(void) {
-  //   if (command == 0) {  // Ctrl+C Pressed
-  //     if (cnf || reto_1 || reto_2) Serial.println("Reto detenido");
-  //     cnf = 0;
-  //     reto_1 = 0;
-  //     reto_2 = 0;
-  //     doNotOpen = 0;
-  //   }
+  if (command == 0) {  // Ctrl+C Pressed
+    if (cnf || reto_1 || reto_2) Serial.println("Reto detenido");
+    cnf = 0;
+    reto_1 = 0;
+    reto_2 = 0;
+    doNotOpen = 0;
+  }
 }
 
 void printFS(int index) {
@@ -427,7 +432,7 @@ int8_t processSerialCommand(void) {  // Redirige al menu secundario segun entrad
         if (serialCache == "./escucha") return CM_EXEC;
         if (serialCache == "./cantar") return CM_EXED;
         if (serialCache == "./leds") return CM_EXEA;
-        if (serialCache == "./decibelimetro") return CM_EXEE;
+        // if (serialCache == "./decibelimetro") return CM_EXEE;
         if (serialCache == "./wav_file") return CM_EXEF;
         if (serialCache == "./text.tx") return CM_EXEG;
         if (serialCache == "./cheems") return CM_EXEH;

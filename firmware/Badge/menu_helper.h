@@ -9,6 +9,7 @@ enum MenuLayer {
   LAYER_CONFERENCE_PAIRING_SUCCESS_BANNER,
   LAYER_CONFERENCE_LIST,
   LAYER_CONFERENCE_HELP_BANNER,
+  LAYER_TERMINAL,
 };
 
 #if defined(RP2040)
@@ -134,8 +135,14 @@ char *conferenceHelpBanner[] = {
     "   mediante serial"};
 #endif
 
-char *conferenceList[500] = {
+char *conferenceList[700] = {
     "  Las conferencias   ",
     "   apareceran aqui   "};
+
+/********************* Terminal menu ************************/
+
+char *terminalBanner[] = {
+    "",
+    "   Terminal serial   "};
 
 #endif
