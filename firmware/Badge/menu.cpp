@@ -105,7 +105,21 @@ void Menu::begin() {
   display.clearDisplay();
   display.drawBitmap(0, 0, epd_bitmap_logo, 128, 64, WHITE);
   display.display();
-  delay(2000);  // Pause for 2 seconds
+
+  for (uint8_t i = 0; i < 4; i++) {
+    pixels.setPixelColor(i, pixels.Color(0, 0, 255));
+    pixels.show();
+    delay(250);
+  }
+  delay(250);
+
+  for (uint8_t i = 3; i > 0; i--) {
+    pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+    pixels.show();
+    delay(250);
+  }
+  ledsOff();
+
   showVMenu();
   fillTalksList();
 }
