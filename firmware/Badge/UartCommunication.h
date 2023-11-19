@@ -16,7 +16,7 @@
 class UartCommunication {
  private:
   String ID;
-  Debug debug;
+  Debug& debug = Debug::getInstance();
   String talkName;
   bool communication;
   std::vector<String> talkList;

@@ -53,6 +53,7 @@ Menu::Menu() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET),
 void Menu::begin() {
   this->talkLineIndex = 0;
   this->terminalEnabled = false;
+  this->terminalEnabledFlag = false;
   pixels.begin();
   ledsOff();
 #if defined(ESP32_S3)
@@ -61,7 +62,8 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  debug.waitForSerialConnection();
+  // debug.waitForSerialConnection();  // For testing purposes
+  debug.disable();  // Disable debug for production
   debug.println("Board name: " + String(BOARD_NAME));
   speaker.setTalk(28);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
@@ -229,12 +231,9 @@ void Menu::loop() {
   }
 
   // If currentLayer is LAYER_TERMINAL, then enable terminal after 1 second
-  if (currentLayer == LAYER_TERMINAL) {
-    static unsigned long lastTime = millis();
-    if (millis() - lastTime > 1000) {
-      lastTime = millis();
-      enableTerminal();
-    }
+  if (currentLayer == LAYER_TERMINAL && millis() - startTerminalTime > 1000 && terminalEnabledFlag) {
+    enableTerminal();
+    terminalEnabledFlag = false;
   }
 }
 
@@ -573,6 +572,8 @@ void Menu::mainMenu() {
 #if defined(RP2040)
     case MAIN_MENU_TERMINAL:
       currentLayer = LAYER_TERMINAL;
+      startTerminalTime = millis();
+      terminalEnabledFlag = true;
       break;
 #else
     case MAIN_MENU_AIRTAG:

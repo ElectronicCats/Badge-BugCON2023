@@ -13,6 +13,11 @@ Debug::Debug() {
   isEnable = false;
 }
 
+Debug& Debug::getInstance() {
+  static Debug instance;
+  return instance;
+}
+
 void Debug::begin(int baudRate) {
   Serial.begin(baudRate);
 #ifdef RP2040

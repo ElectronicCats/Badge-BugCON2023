@@ -5,17 +5,18 @@
 #include "hardware.h"
 
 class Debug {
-	private:
-		bool isEnable;
+ private:
+  bool isEnable;
+  Debug();
 
-	public:
-		Debug();
-		void begin(int baudRate);
-		void enable();
-		void disable();
-		void waitForSerialConnection();
-		void print(String message);
-		void println(String message);
+ public:
+  static Debug& getInstance();
+	void begin(int baudRate);
+  void enable();
+  void disable();
+  void waitForSerialConnection();
+  void print(String message);
+  void println(String message);
 };
 
 #endif

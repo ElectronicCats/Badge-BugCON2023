@@ -91,7 +91,9 @@ class Menu {
   Airtag airTag;
 #endif
   bool terminalEnabled;
-  Debug debug;
+  bool terminalEnabledFlag;
+  unsigned long startTerminalTime;
+  Debug& debug = Debug::getInstance();
   UartCommunication speaker;
   UartCommunication vip;
   uint8_t selectedOption;
