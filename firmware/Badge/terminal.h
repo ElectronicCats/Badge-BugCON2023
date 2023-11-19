@@ -16,15 +16,9 @@ Menu menu;
 
 #ifndef ESP32
 
-#include <cww_MorseTx.h>
-
-#include "Adafruit_TinyUSB.h"
 #include "ascii_art.h"
 #include "enums.h"
 #include "hardware/flash.h"
-
-// #include <PDM.h>
-#include <JorgeBigbang200-project-1_inferencing.h>
 
 // GPIO21 Back LED
 //   1    2   4   8
@@ -57,7 +51,7 @@ int FS_index = 0;
 String FS[4][4] = {
     {"bugcon/ ", "herramientas/ ", "", ""},  // FS[0] = Root
     {"leds ", " ", "", ""},                  // FS[1] = /juegos
-    {"luz ", "", "", ""},                    // FS[2] = /BUGCON        "luz ", "escucha ", "cantar", ""
+    {"info ", "", "", ""},                   // FS[2] = /BUGCON        "luz ", "escucha ", "cantar", ""
     {" ", "", "", ""}                        // FS[3] = /curiosidades
 };
 
@@ -69,71 +63,13 @@ void terminalSetup();
 void terminalLoop();
 void reset(void);
 void leds();
-void prueba_2(void);
-void prueba_3(void);
-void juego_1(void);
-void juego_2(void);
-void juego_3(void);
-void traducirPalabra();
-void emitirMorse();
+void info();
 void printFS(int index);
 int16_t processSerialNumber(void);
 int8_t processSerialCommand(void);
 void printIndexFS(int index);
-bool sendHIDInfo();
-
-// HID report descriptor using TinyUSB's template
-// uint8_t const desc_hid_report[] =
-//     {
-//         TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(RID_KEYBOARD)),
-//         TUD_HID_REPORT_DESC_MOUSE(HID_REPORT_ID(RID_MOUSE)),
-//         TUD_HID_REPORT_DESC_CONSUMER(HID_REPORT_ID(RID_CONSUMER_CONTROL))};
-
-// Adafruit_USBD_HID usb_hid;
-
-// cww_MorseTx morse(8, 10, 18, 1000);
 
 void terminalSetup() {
-  //   for (i = 0; i < 4; i++) pinMode(led[i], OUTPUT);
-  //   pinMode(amp_en, OUTPUT);
-  //   pinMode(A2, OUTPUT);  // buzzer
-  //   pinMode(btn, INPUT_PULLUP);
-
-  //   usb_hid.setPollInterval(2);
-  //   usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
-  //   usb_hid.setStringDescriptor("BugCON badge!");
-  //   digitalWrite(amp_en, HIGH);
-
-  // usb_hid.begin();
-  // while (!Serial) {
-  //   int rndnum = 0;
-  //   if (!digitalRead(btn)) {
-  //     for (int k = 0; k < 8; k++) {
-  //       for (int j = 0; j < 5; j++) digitalWrite(led[j], LOW);
-  //       rndnum = random(1, 5);
-  //       switch (rndnum) {
-  //         case 1:
-  //           digitalWrite(10, HIGH);
-  //           break;
-  //         case 2:
-  //           digitalWrite(25, HIGH);
-  //           break;
-  //         case 3:
-  //           digitalWrite(26, HIGH);
-  //           break;
-  //         case 4:
-  //           digitalWrite(8, HIGH);
-  //           break;
-  //       }
-  //       delay(500);
-  //     }
-  //     analogWrite(A2, 200);
-  //     delay(1000);
-  //     for (int j = 0; j < 5; j++) digitalWrite(led[j], LOW);
-  //     analogWrite(A2, 0);
-  //   }
-  // }
-  // digitalWrite(amp_en, LOW);
   Serial.println("Bug CON Badge by:");  // Introduccion
   Serial.println("Electronic Cats");
 
@@ -179,41 +115,22 @@ void terminalLoop() {
         case CM_CDC:  // cd /curiosidades
           FS_index = FS_CURIOSIDADES;
           break;
-        case CM_EXEB:  // Reto 1 (Codigo de luces)
+        case CM_EXEB: {
           if (FS_index != FS_BUGCON) {
             Serial.println("Command not found");
             break;  // check we are in the folder
           }
-          if (candado_reto <= 0) reto_1 = 0;
-          Serial.println("La luz de tu brujula será la guia:");
-          do {
-            int16_t number = -2;
-            while (number == -2 && candado_reto == 0) {
-              number = processSerialNumber();
-            }
-            if (number == 1337 || candado_reto > 0) {
-              Serial.println("Seguiste correctamente la luz. Ahora te escuchamos...");
-              Serial.println("...");
-              Serial.println("...");
-              Serial.println("Recuerda, la palabra que buscas reconoce a aquellas personas que se unen a venerar una verdad");
-              FS[2][2] = "escucha";
-              reto_1 = 1;
-              if (candado_reto < 1) candado_reto = 1;
-            } else {
-              int n;
-              n++;
-              if (n == 3) {
-                Serial.println("Equivocaciones excedidas.Saliendo...");
-                reto_1 = 1;
-                n = 0;
-              } else {
-                Serial.print(3 - n);
-                Serial.println(" intentos restantes");
-              }
-            }
-          } while (!reto_1);
-          delay(10);
+          Serial.println("Desarrollado por Electronic Cats");
+          Serial.println("Agradecemos a: ");
+          Serial.println("BugCON y las grandes personas que hacen posible el evento");
+          Serial.println("Firmware:");
+          Serial.println("Francisco - @DeimosHall");
+          Serial.println("Hardware:");
+          Serial.println("Gustavo y Capuchino\n");
+          Serial.println("#Unetealaresistencia");
+          Serial.println("Power Mexicano");
           break;
+        }
         // Reto 2
         case CM_EXEC: {
           if (FS_index != FS_BUGCON) {
@@ -237,7 +154,7 @@ void terminalLoop() {
           while (digitalRead(btn))
             ;
           while (reto_2 == 1 && !digitalRead(btn)) {
-            prueba_2();
+            // prueba_2();
           }
           // microphone_inference_end();
           delay(10);
@@ -264,7 +181,7 @@ void terminalLoop() {
           }
           Serial.println("El pajaro minusculo cantara con PRESSion...");
           Serial.println("Dinos lo que escuchas:");
-          while (candado_reto != 3) prueba_3();
+          // while (candado_reto != 3) prueba_3();
           break;
         }
         case CM_EXEA:  // execute file A = Config file                              juego_1
@@ -282,7 +199,7 @@ void terminalLoop() {
             Serial.println("Command not found");
             break;  // check we are in the folder
           }
-          juego_2();
+          // juego_2();
           conf = 0;
           break;
 
@@ -292,7 +209,7 @@ void terminalLoop() {
             Serial.println("Command not found");
             break;  // check we are in the folder
           }
-          juego_3();
+          // juego_3();
           conf = 0;
           break;
         case CM_EXEG:  // execute file A = Config file                              Rick
@@ -418,24 +335,14 @@ int8_t processSerialCommand(void) {  // Redirige al menu secundario segun entrad
         if (serialCache == "cd ..") return CM_CD;
         if (serialCache == "cd herramientas") return CM_CDA;
         if (serialCache == "cd bugcon") return CM_CDB;
-        if (serialCache == "cd curiosidades") return CM_CDC;
         if (serialCache == "cd herramientas/") return CM_CDA;
         if (serialCache == "cd bugcon/") return CM_CDB;
-        if (serialCache == "cd curiosidades/") return CM_CDC;
         if (serialCache == "cd /herramientas/") return CM_CDA;
         if (serialCache == "cd /bugcon/") return CM_CDB;
-        if (serialCache == "cd /curiosidades/") return CM_CDC;
         if (serialCache == "cd /herramientas") return CM_CDA;
         if (serialCache == "cd /bugcon") return CM_CDB;
-        if (serialCache == "cd /curiosidades") return CM_CDC;
-        if (serialCache == "./luz") return CM_EXEB;
-        if (serialCache == "./escucha") return CM_EXEC;
-        if (serialCache == "./cantar") return CM_EXED;
+        if (serialCache == "./info") return CM_EXEB;
         if (serialCache == "./leds") return CM_EXEA;
-        // if (serialCache == "./decibelimetro") return CM_EXEE;
-        if (serialCache == "./wav_file") return CM_EXEF;
-        if (serialCache == "./text.tx") return CM_EXEG;
-        if (serialCache == "./cheems") return CM_EXEH;
         if (serialCache == "help") return CM_HLP;
         return 99;  // return -2 if its not a command
       }
@@ -474,212 +381,6 @@ void leds() {
     menu.pixels.setPixelColor(i, menu.pixels.Color(red, green, blue));
   }
   menu.pixels.show();
-}
-
-bool sendHIDInfo() {
-  //   // Remote wakeup
-  //   if (TinyUSBDevice.suspended()) {
-  //     // Wake up host if we are in suspend mode
-  //     // and REMOTE_WAKEUP feature is enabled by host
-  //     TinyUSBDevice.remoteWakeup();
-  //   }
-  //   while (1) {
-  //     /*------------- Mouse -------------*/
-  //     if (usb_hid.ready()) {
-  //       int8_t const delta = 20;
-  //       usb_hid.mouseMove(RID_MOUSE, delta, delta);  // right + down
-  //       // delay a bit before attempt to send keyboard report
-  //       delay(10);
-  //     }
-
-  //     /*------------- Keyboard -------------*/
-  //     if (usb_hid.ready()) {
-  //       // use to send key release report
-  //       static bool has_key = false;
-
-  //       if (1) {
-  //         uint8_t keycode[6] = {0};
-  //         keycode[0] = HID_KEY_A;
-  //         usb_hid.keyboardReport(RID_KEYBOARD, 0, keycode);
-  //         has_key = true;
-  //       } else {
-  //         // send empty key report if previously has key pressed
-  //         if (has_key) usb_hid.keyboardRelease(RID_KEYBOARD);
-  //         has_key = false;
-  //       }
-
-  //       // delay a bit before attempt to send consumer report
-  //       delay(10);
-  //     }
-
-  //     /*------------- Consumer Control -------------*/
-  //     if (usb_hid.ready()) {
-  //       // Consumer Control is used to control Media playback, Volume, Brightness etc ...
-  //       // Consumer report is 2-byte containing the control code of the key
-  //       // For list of control check out https://github.com/hathach/tinyusb/blob/master/src/class/hid/hid.h#L544
-
-  //       // use to send consumer release report
-  //       static bool has_consumer_key = false;
-
-  //       // send volume down (0x00EA)
-  //       usb_hid.sendReport16(RID_CONSUMER_CONTROL, HID_USAGE_CONSUMER_VOLUME_DECREMENT);
-  //       has_consumer_key = true;
-  //       delay(10);
-  //     }
-  //   }
-  //   return 1;
-}
-
-void prueba_2(void) {
-  //   delay(500);
-  //   bool m = microphone_inference_record();
-  //   if (!m) {
-  //     Serial.println("ERR: Failed to record audio...\n");
-  //     return;
-  //   }
-  //   signal_t signal;
-  //   signal.total_length = EI_CLASSIFIER_RAW_SAMPLE_COUNT;
-  //   signal.get_data = &microphone_audio_signal_get_data;
-  //   ei_impulse_result_t result = {0};
-
-  //   EI_IMPULSE_ERROR r = run_classifier(&signal, &result, debug_nn);
-  //   if (r != EI_IMPULSE_OK) {
-  //     Serial.println("Error corriendo el clasificador");
-  //     return;
-  //   }
-  //   if (result.classification[0].value > .9) {
-  //     Serial.println("Bienvenido al culto!");
-  //     Serial.println("Ahora sigue nuestras ordenes");
-  //     FS[2][3] = " cantar";
-  //     printFS(2);
-  //     reto_2 = 0;
-  //     candado_reto = 2;
-  //   }
-  // #if EI_CLASSIFIER_HAS_ANOMALY == 1
-  //   Serial.println("    anomaly score: %.3f", result.anomaly);
-  // #endif
-}
-
-void prueba_3(void) {
-  //   digitalWrite(amp_en, HIGH);
-  //   if (!digitalRead(btn)) {
-  //     traducirPalabra();
-  //     emitirMorse();
-  //     while (digitalRead(btn) && candado_reto != 3) {
-  //       String readString;
-  //       while (Serial.available()) {
-  //         delay(3);
-  //         char contrasena = Serial.read();
-  //         readString += contrasena;
-  //       }
-  //       readString.trim();
-  //       if (readString.length() > 0) {
-  //         if (readString == "iluminar") {
-  //           Serial.println("Bienvenido al Nuevo Orden Mundial, tu silla te espera");
-  //           Serial.println("Manda un correo a core@bugcon.org con una captura de la terminal completa con este mensaje");
-  //           digitalWrite(amp_en, LOW);
-  //           p3error = 0;
-  //           candado_reto = 3;
-  //         } else {
-  //           p++;
-  //           if (p == 3) {
-  //             Serial.println("Equivocaciones excedidas.Saliendo...");
-  //             candado_reto = 3;
-  //             p3error = 1;
-  //             p = 0;
-  //             digitalWrite(amp_en, LOW);
-  //           } else {
-  //             Serial.print(3 - p);
-  //             Serial.println(" intentos restantes");
-  //           }
-  //         }
-  //         readString = "";
-  //       }
-  //     }
-  //   }
-}
-
-void juego_1(void) {
-  //   int rndnum = 0;
-  //   Serial.println("Quieres jugar a botella?");
-  //   Serial.println("Oprime PRESS para girar!");
-  //   while (digitalRead(btn))
-  //     ;
-  //   Serial.println("Comienza!");
-  //   for (int k = 0; k < 12; k++) {
-  //     for (int j = 0; j < 5; j++) digitalWrite(led[j], LOW);
-  //     rndnum = random(1, 5);
-  //     switch (rndnum) {
-  //       case 1:
-  //         digitalWrite(10, HIGH);
-  //         break;
-  //       case 2:
-  //         digitalWrite(8, HIGH);
-  //         break;
-  //       case 3:
-  //         digitalWrite(25, HIGH);
-  //         break;
-  //       case 4:
-  //         digitalWrite(26, HIGH);
-  //         break;
-  //     }
-  //     delay(1000);
-  //   }
-  //   digitalWrite(amp_en, HIGH);
-  //   analogWrite(A2, 200);
-  //   Serial.println("Gracias por jugar!");
-  //   delay(5000);
-  //   analogWrite(A2, 0);
-  //   digitalWrite(amp_en, LOW);
-  //   for (int j = 0; j < 5; j++) digitalWrite(led[j], LOW);
-}
-
-void juego_2(void) {
-  //   //   static const char channels = 1;
-  //   //   static const int frequency = 16000;
-  //   //   // Wait for samples to be read
-  //   //    PDM.onReceive(onPDMdata);
-  //   //    if (!PDM.begin(channels, frequency)) {
-  //   //            Serial.println("Failed to start PDM!");
-  //   //            while (1);
-  //   //     }
-  //   //     Serial.println("Decibelimetro iniciado. Presiona Press para terminar");
-  //   //     while(digitalRead(btn)){
-  //   //       if (samplesRead) {
-  //   //        // Print samples to the serial monitor or plotter
-  //   //          for (int i = 0; i < samplesRead; i++) {
-  //   //           if (sampleBuffer[i] >=7000)digitalWrite(26, HIGH);
-  //   //           if (sampleBuffer[i] >=5200)digitalWrite(25, HIGH);
-  //   //           if (sampleBuffer[i] >=3800)digitalWrite(10, HIGH);
-  //   //           if (sampleBuffer[i] >=2200)digitalWrite(8, HIGH);
-  //   //        for (int j = 0; j < 5; j++)digitalWrite(led[j],LOW);
-  //   //        }
-  //   //     // Clear the read count
-  //   //     samplesRead = 0;
-  //   //   }
-  //   //  }
-  //   //  Serial.println("Decibelimetro detenido");
-}
-
-void juego_3(void) {
-  // }
-  // static void pdm_data_ready_inference_callback(void) {
-  //   // int bytesAvailable = PDM.available();
-
-  //   // // read into the sample buffer
-  //   // int bytesRead = PDM.read((char *)&sampleBuffer[0], bytesAvailable);
-
-  //   // if (inference.buf_ready == 0) {
-  //   //     for(int i = 0; i < bytesRead>>1; i++) {
-  //   //         inference.buffer[inference.buf_count++] = sampleBuffer[i];
-
-  //   //         if(inference.buf_count >= inference.n_samples) {
-  //   //             inference.buf_count = 0;
-  //   //             inference.buf_ready = 1;
-  //   //             break;
-  //   //         }
-  //   //     }
-  //   // }
 }
 
 #endif  // RP2040

@@ -10,6 +10,7 @@ enum MenuLayer {
   LAYER_CONFERENCE_LIST,
   LAYER_CONFERENCE_HELP_BANNER,
   LAYER_TERMINAL,
+  LAYER_INFO_MENU,
 };
 
 #if defined(RP2040)
@@ -86,8 +87,7 @@ char *mainOptions[] = {
     "2. LEDs",
     "3. Conferencias",
     "4. Informacion",
-    "5. AirTag",
-    "6. Servidor web"};
+    "5. AirTag"};
 #endif
 
 /************************ LEDs menu ***************************/
@@ -144,5 +144,22 @@ char *conferenceList[700] = {
 char *terminalBanner[] = {
     "",
     "   Terminal serial   "};
+
+/*********************** Info menu **************************/
+
+char *infoMenu[] = {
+    "Desarrollado por:    ",
+    "Electronic Cats      ",
+    "Agradecemos a: BugCON",
+    "y las grandes        ",
+    "personas que hacen   ",
+    "posible el evento    ",
+    "Firmware:            ",
+    "Francisco-@DeimosHall",
+    "Hardware:            ",
+    "Gustavo y Capuchino  ",
+    "                     ",
+    "#Unetealaresistencia ",
+    "Power Mexicano       "};
 
 #endif

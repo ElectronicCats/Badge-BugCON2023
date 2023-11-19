@@ -25,9 +25,6 @@
   Distributed as-is; no warranty is given.
 ***********************************************************************************/
 #include "terminal.h"
-// #include "menu.h"
-
-// Menu menu;
 
 void setup() {
   menu.begin();

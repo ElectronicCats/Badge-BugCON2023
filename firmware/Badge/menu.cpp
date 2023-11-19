@@ -334,6 +334,10 @@ char **Menu::updateVMenuOptions() {
       options = conferenceList;
       optionsSize = sizeof(conferenceList) / sizeof(conferenceList[0]);
       break;
+    case LAYER_INFO_MENU:
+      options = infoMenu;
+      optionsSize = sizeof(infoMenu) / sizeof(infoMenu[0]);
+      break;
     default:
       options = errorBanner;
       optionsSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
@@ -503,6 +507,7 @@ void Menu::updatePreviousLayer() {
     case LAYER_LEDS_MENU:
     case LAYER_CONFERENCE_MENU:
     case LAYER_TERMINAL:
+    case LAYER_INFO_MENU:
       previousLayer = LAYER_MAIN_MENU;
       break;
     case LAYER_CONFERENCE_PAIRING_BANNER:
@@ -568,6 +573,7 @@ void Menu::mainMenu() {
       currentLayer = LAYER_CONFERENCE_MENU;
       break;
     case MAIN_MENU_INFO:
+      currentLayer = LAYER_INFO_MENU;
       break;
 #if defined(RP2040)
     case MAIN_MENU_TERMINAL:
