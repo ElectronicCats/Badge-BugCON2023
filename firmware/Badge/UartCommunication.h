@@ -30,6 +30,7 @@ class UartCommunication {
   UartCommunication();
   bool receivedSuccess;
   void begin();
+  void ereaseFlash();
   void setTalk(uint8_t index);
   String getID();
   void sendTalkName();

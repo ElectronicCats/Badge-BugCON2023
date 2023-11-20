@@ -120,15 +120,14 @@ void UartCommunication::begin() {
     talkList.push_back(String(validTalks[receivedTalksOrder[i]]));
     debug.println("Talk " + String(i) + ": " + talkList[i]);
   }
-
-  // Reset talks counter and talks order
-  {
-    // talksCounter = 0;
-    // eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
-    // memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
-    // eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
-  }
 #endif
+}
+
+void UartCommunication::ereaseFlash() {
+  talksCounter = 0;
+  eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
+  memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
+  eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
 }
 
 void UartCommunication::updateTalkList(String talkName) {

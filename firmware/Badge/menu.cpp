@@ -67,6 +67,7 @@ void Menu::begin() {
   debug.println("Board name: " + String(BOARD_NAME));
   speaker.setTalk(28);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
+  // vip.ereaseFlash();  // Uncomment to erease conference list
   debug.println("ID: " + String(speaker.getID()));
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
