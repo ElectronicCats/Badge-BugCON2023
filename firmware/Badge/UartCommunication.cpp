@@ -124,10 +124,12 @@ void UartCommunication::begin() {
 }
 
 void UartCommunication::ereaseFlash() {
+#ifdef RP2040
   talksCounter = 0;
   eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
   memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
   eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
+#endif
 }
 
 void UartCommunication::updateTalkList(String talkName) {

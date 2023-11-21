@@ -143,7 +143,8 @@ char *conferenceList[700] = {
 
 char *terminalBanner[] = {
     "",
-    "   Terminal serial   "};
+    "   Terminal serial   "
+    "       activa        "};
 
 /*********************** Info menu **************************/
 
