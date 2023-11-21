@@ -103,6 +103,7 @@ class Menu {
   uint8_t bannerSize;
   uint8_t menuOrientation;
   uint16_t talkLineIndex;
+  void ledsAnimation();
   void scanKeys();
   void showVMenu();
   void showHMenu();
