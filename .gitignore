@@ -34,5 +34,7 @@ hardware/SAMD11/BugCON2023_samd11-backups/
 # macOS finder files
 **/.DS_Store
 
+.vscode/
+
 # Firmware binaries
 firmware/**/build/

@@ -62,13 +62,16 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  // debug.waitForSerialConnection();  // For testing purposes
-  debug.disable();  // Disable debug for production
+  debug.waitForSerialConnection();  // For testing purposes
+  // debug.disable();  // Disable debug for production
   debug.println("Board name: " + String(BOARD_NAME));
   speaker.setTalk(28);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
   // vip.ereaseFlash();  // Uncomment to erease conference list
   debug.println("ID: " + String(speaker.getID()));
+#ifdef ESP32
+  // webServer.begin();
+#endif
 
 #if defined(ESP32_DEVKIT) || defined(ESP32_S3)
   debug.println("Touch left pin: " + String(TOUCH_LEFT));
@@ -201,6 +204,9 @@ void Menu::scanKeys() {
 
 void Menu::loop() {
   scanKeys();
+#ifdef ESP32
+  // webServer.loop();
+#endif
 
   // Print debug info every 1 second
   static unsigned long lastDebugPrint = 0;
