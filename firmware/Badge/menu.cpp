@@ -62,8 +62,8 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  debug.waitForSerialConnection();  // For testing purposes
-  // debug.disable();  // Disable debug for production
+  // debug.waitForSerialConnection();  // For testing purposes
+  debug.disable();  // Disable debug for production
   debug.println("Board name: " + String(BOARD_NAME));
   speaker.setTalk(4);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
