@@ -16,6 +16,12 @@
 #define RP2040
 #endif
 
+#if defined(ARDUINO_ARCH_RP2040)
+#ifndef ARDUINO_ARCH_MBED_RP2040
+#define ARCH_RP2040
+#endif
+#endif
+
 #define DEBOUNCE_TIME_MS 70
 #define LONG_CLICK_TIME_MS 500
 #define BACK_ANIMATION_TIME_MS 150
