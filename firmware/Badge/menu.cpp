@@ -53,6 +53,7 @@ void Menu::begin() {
   this->talkLineIndex = 0;
   this->terminalEnabled = false;
   this->terminalEnabledFlag = false;
+  this->serverActived = false;
   pixels.begin();
   ledsOff();
 #if defined(ESP32_S3)
@@ -277,6 +278,12 @@ void Menu::loop() {
   if (currentLayer == LAYER_TERMINAL && millis() - startTerminalTime > 1000 && terminalEnabledFlag) {
     enableTerminal();
     terminalEnabledFlag = false;
+  }
+
+  if (currentLayer == LAYER_SERVER_MENU) {
+    serverActived = true;
+  } else {
+    serverActived = false;
   }
 }
 
@@ -874,6 +881,10 @@ void Menu::updateWiFiParams() {
   serverOptions[SERVER_MENU_SSID] = ssid;
   serverOptions[SERVER_MENU_PASSWORD] = password;
   serverOptions[SERVER_MENU_IP] = ip;
+}
+
+bool Menu::isServerActived() {
+  return this->serverActived;
 }
 
 /**

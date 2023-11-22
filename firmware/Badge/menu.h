@@ -101,6 +101,7 @@ class Menu {
   uint8_t bannerSize;
   uint8_t menuOrientation;
   uint16_t talkLineIndex;
+  bool serverActived;
   void ledsAnimation();
   void scanKeys();
   void showVMenu();
@@ -145,6 +146,7 @@ class Menu {
   void loop();
   bool isTerminalEnabled();
   void disableTerminal();
+  bool isServerActived();
 };
 
 #endif

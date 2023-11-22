@@ -78,7 +78,8 @@ void loop() {
 #endif
 
 #ifdef ESP32
-  runServer();
+  if (menu.isServerActived())
+    runServer();
 #endif
 }
 
