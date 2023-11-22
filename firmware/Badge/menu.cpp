@@ -62,9 +62,9 @@ void Menu::begin() {
 
   debug.begin(9600);
   // debug.waitForSerialConnection();  // For testing purposes
-  // debug.disable();  // Disable debug for production
+  debug.disable();  // Disable debug for production
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(28);  // Value from 0 to 28, check UartCommunication.cpp
+  speaker.setTalk(3);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
   // vip.ereaseFlash();  // Uncomment to erease conference list
   debug.println("ID: " + String(speaker.getID()));

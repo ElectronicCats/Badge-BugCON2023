@@ -47,6 +47,7 @@ upload:
 
 monitor:
 	@$(ARDUINO_CLI_PATH) monitor -p $(MONITOR_PORT)
+	# screen $(MONITOR_PORT) 9600
 
 clean:
 	@$(ARDUINO_CLI_PATH) cache clean

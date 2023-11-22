@@ -1,14 +1,21 @@
 #include "UartCommunication.h"
 
+#if defined(ARCH_RP2040)
+#include <EEPROM.h>
+int addr = 0;
+int talksCounterAddr = 2;
+int receivedTalksOrderAddr = 4;
+#endif
+
 #ifdef ARDUINO_ARCH_MBED_RP2040
 // 512KB block device, starting 1MB inside the flash
 FlashIAPBlockDevice bd(XIP_BASE + 1024 * 1024, 1024 * 512);
 mbed::TDBStore eeprom(&bd);
 mbed::KVStore::info_t info;
 
+#endif
 uint8_t rebootCounterBuffer[4];
 uint16_t rebootCounter = 0;
-#endif
 
 const char *validTalks[] = {
     /*------col0------+--------col1--------+--------col2--------+--------col3--------+--------col4--------+--------col5--------+--------col6--------+--------col7--------+*/
@@ -115,7 +122,36 @@ void UartCommunication::begin() {
     eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
   }
 
-  // Fil talk list
+  // Fill talk list
+  for (size_t i = 0; i < talksCounter; i++) {
+    talkList.push_back(String(validTalks[receivedTalksOrder[i]]));
+    debug.println("Talk " + String(i) + ": " + talkList[i]);
+  }
+#endif
+#ifdef ARCH_RP2040
+  EEPROM.begin(512);
+  rebootCounter = EEPROM.read(addr);
+  debug.println("Reboot counter: " + String(rebootCounter));
+  rebootCounter++;
+  EEPROM.write(addr, rebootCounter);
+  EEPROM.commit();
+
+  talksCounter = EEPROM.read(talksCounterAddr);
+  talksCounter = talksCounter == 255 ? 0 : talksCounter;
+  debug.println("Talks counter: " + String(talksCounter));
+
+  for (size_t i = 0; i < sizeof(receivedTalksOrder) / sizeof(receivedTalksOrder[0]); i++) {
+    // receivedTalksOrder[i] = EEPROM.read(receivedTalksOrderAddr + i);
+    int value = EEPROM.read(receivedTalksOrderAddr + i);
+    if (value == 255) {
+      receivedTalksOrder[i] = 0;
+    } else {
+      receivedTalksOrder[i] = value;
+    }
+    debug.println(String(i) + ": " + String(receivedTalksOrder[i]));
+  }
+
+  // Fill talk list
   for (size_t i = 0; i < talksCounter; i++) {
     talkList.push_back(String(validTalks[receivedTalksOrder[i]]));
     debug.println("Talk " + String(i) + ": " + talkList[i]);
@@ -129,6 +165,15 @@ void UartCommunication::ereaseFlash() {
   eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
   memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
   eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
+#endif
+#ifdef ARCH_RP2040
+  talksCounter = 0;
+  EEPROM.write(talksCounterAddr, talksCounter);
+  EEPROM.commit();
+  for (size_t i = 0; i < sizeof(receivedTalksOrder) / sizeof(receivedTalksOrder[0]); i++) {
+    EEPROM.write(receivedTalksOrderAddr + i, 0);
+    EEPROM.commit();
+  }
 #endif
 }
 
@@ -174,11 +219,19 @@ void UartCommunication::updateTalkList(String talkName) {
 #ifdef ARDUINO_ARCH_MBED_RP2040
   eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
 #endif
+#ifdef ARCH_RP2040
+  EEPROM.write(receivedTalksOrderAddr + talksCounter, index);
+  EEPROM.commit();
+#endif
 
   // Update talks counter
   talksCounter++;
 #ifdef ARDUINO_ARCH_MBED_RP2040
   eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
+#endif
+#ifdef ARCH_RP2040
+  EEPROM.write(talksCounterAddr, talksCounter);
+  EEPROM.commit();
 #endif
 }
 
