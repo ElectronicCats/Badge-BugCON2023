@@ -40,7 +40,7 @@
 #elif defined(ESP32_DEVKIT)
 #define NEOPIXELS_PIN 19
 #elif defined(MININO)
-#define NEOPIXELS_PIN 46
+#define NEOPIXELS_PIN 11
 #else // ESP32_S3
 #define NEOPIXELS_PIN 38
 #endif
