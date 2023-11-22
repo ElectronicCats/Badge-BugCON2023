@@ -123,7 +123,7 @@ char *pairingSuccessBanner[] = {
     "  Nueva conferencia  ",
     "      agregada       "};
 
-#if defined(RP2040)
+#if defined(RP2040) || defined(ARDUINO_ARCH_MBED_RP2040)
 char *conferenceHelpBanner[] = {
     "   Debes conectarte  ",
     "     a un speaker",

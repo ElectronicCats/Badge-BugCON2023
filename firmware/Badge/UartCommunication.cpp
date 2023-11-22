@@ -1,6 +1,6 @@
 #include "UartCommunication.h"
 
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
 // 512KB block device, starting 1MB inside the flash
 FlashIAPBlockDevice bd(XIP_BASE + 1024 * 1024, 1024 * 512);
 mbed::TDBStore eeprom(&bd);
@@ -77,7 +77,7 @@ UartCommunication::UartCommunication() {
 }
 
 void UartCommunication::begin() {
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
   eeprom.init();
 
   if (eeprom.get_info("rebootCounter", &info) != MBED_ERROR_ITEM_NOT_FOUND) {
@@ -124,7 +124,7 @@ void UartCommunication::begin() {
 }
 
 void UartCommunication::ereaseFlash() {
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
   talksCounter = 0;
   eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
   memset(receivedTalksOrder, 0, sizeof(receivedTalksOrder));
@@ -171,13 +171,13 @@ void UartCommunication::updateTalkList(String talkName) {
   // Update talks order with index
   debug.println("New talk index: " + String(index));
   receivedTalksOrder[talksCounter] = index;
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
   eeprom.set("receivedTalksOrder", receivedTalksOrder, sizeof(receivedTalksOrder), 0);
 #endif
 
   // Update talks counter
   talksCounter++;
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
   eeprom.set("talksCounter", &talksCounter, sizeof(talksCounter), 0);
 #endif
 }

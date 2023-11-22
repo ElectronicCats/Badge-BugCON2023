@@ -7,7 +7,7 @@
 
 #include "debug.h"
 #include "hardware.h"
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
 #include "FlashIAPBlockDevice.h"
 #include "KVStore.h"
 #include "TDBStore.h"

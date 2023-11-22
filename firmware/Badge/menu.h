@@ -24,8 +24,8 @@
 #define OLED_RESET -1        // Reset pin # (or -1 if sharing Arduino reset pin)
 #define SCREEN_ADDRESS 0x3C  ///< See datasheet for Address; 0x3D for 128x64, 0x3C ,for 128x32
 
-#define WHITE 1
-#define BLACK 0
+// #define WHITE 1
+// #define BLACK 0
 #define VERTICAL_MENU 0
 #define HORIZONTAL_MENU 1
 #define CHARS_PER_LINE 21

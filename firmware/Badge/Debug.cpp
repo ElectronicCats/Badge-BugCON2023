@@ -1,6 +1,6 @@
 #include "Debug.h"
 
-#ifdef RP2040
+#ifdef ARDUINO_ARCH_MBED_RP2040
 UART Serial2(8, 9, NC, NC);  // TX, RX, RTS, CTS
 #endif
 

@@ -10,7 +10,9 @@
 		#define BOARD_NAME "ESP32"
 		#define ESP32_DEVKIT
 	#endif
-#else
+#endif
+
+#if defined(ARDUINO_ARCH_MBED_RP2040) || defined(ARDUINO_ARCH_RP2040)
 #define RP2040
 #endif
 
@@ -34,7 +36,7 @@
 #endif
 #define OLD_TOUCH_LEFT 18    // GPIO18
 
-#if defined(RP2040)
+#if defined(ARDUINO_ARCH_MBED_RP2040) || defined(ARDUINO_ARCH_RP2040)
 // #define NEOPIXELS_PIN 16  // GPIO23 -> For development in Raspberry Pi Pico
 #define NEOPIXELS_PIN 23  // For production in BugCON badge
 #elif defined(ESP32_DEVKIT)
