@@ -1,11 +1,11 @@
 BOARD ?= rp2040 # rp2040, esp32, esp32s3
 
 BOARD_TAG_1 = arduino:mbed_rp2040:pico
-MONITOR_PORT_1 = /dev/cu.usbmodem11101
+MONITOR_PORT_1 = /dev/cu.usbmodem11401
 BOARD_TAG_2 = esp32:esp32:esp32wrover
 MONITOR_PORT_2 = /dev/cu.wchusbserial550D0100521
 BOARD_TAG_3 = esp32:esp32:esp32s3:CDCOnBoot=cdc
-MONITOR_PORT_3 = /dev/cu.usbmodem11401
+MONITOR_PORT_3 = /dev/cu.usbmodem11101
 ARDUINO_CLI_PATH := arduino-cli
 
 ifeq ($(BOARD),rp2040)
@@ -35,6 +35,9 @@ help:
 	@echo "  make upload BOARD=rp2040"
 	@echo "  make all BOARD=esp32s3"
 
+translate:
+	@python3 web_files_converter.py
+
 compile:
 	$(ARDUINO_CLI_PATH) compile --fqbn $(BOARD_TAG) --export-binaries
 
@@ -47,6 +50,6 @@ monitor:
 clean:
 	@$(ARDUINO_CLI_PATH) cache clean
 
-all: test compile upload monitor
+all: test translate compile upload monitor
 
 .PHONY: compile upload monitor clean all

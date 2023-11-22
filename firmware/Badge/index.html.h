@@ -18,7 +18,7 @@ const char* index_html = R"=====(<!DOCTYPE html>
         <label for="blue">Azul: <span id="blueValue">0</span></label>
         <input type="range" id="blue" min="0" max="255" oninput="updateValue('blue', 'blueValue')">
 
-        <button onclick="aceptar()">Aceptar</button>
+        <button onclick="play()">Aceptar</button>
     </div>
 
     <script src="main.js"></script>

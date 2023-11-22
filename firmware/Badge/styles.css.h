@@ -17,7 +17,7 @@ label {
 }
 
 input[type="range"] {
-    width: 80%; /* Ajusta el ancho de los sliders según tus necesidades */
+    width: 80%;
     padding: 5px;
     margin-bottom: 10px;
 }
