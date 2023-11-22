@@ -11,6 +11,7 @@ enum MenuLayer {
   LAYER_CONFERENCE_HELP_BANNER,
   LAYER_TERMINAL,
   LAYER_INFO_MENU,
+  LAYER_SERVER_MENU,
 };
 
 #if defined(RP2040)
@@ -58,6 +59,12 @@ enum PairMenuOptions {
 #define PAIR_MENU_CONFERENCES -1
 #endif
 
+enum ServerMenuOptions {
+	SERVER_MENU_SSID = 0,
+	SERVER_MENU_PASSWORD,
+	SERVER_MENU_IP,
+};
+
 /************************* Banners ****************************/
 
 char *errorBanner[] = {
@@ -88,7 +95,8 @@ char *mainOptions[] = {
     "2. LEDs",
     "3. Conferencias",
     "4. Informacion",
-    "5. AirTag"};
+    "5. AirTag",
+    "6. Servidor web"};
 #endif
 
 /************************ LEDs menu ***************************/
@@ -145,7 +153,7 @@ char *conferenceList[700] = {
 
 char *terminalBanner[] = {
     "",
-    "   Terminal serial   "
+    "   Terminal serial   ",
     "       activa        "};
 
 /*********************** Info menu **************************/
@@ -164,5 +172,12 @@ char *infoMenu[] = {
     "                     ",
     "#Unetealaresistencia ",
     "Power Mexicano       "};
+
+/********************** Server menu *************************/
+
+char *serverOptions[] = {
+    "1. SSID:             ",
+    "2. Password:         ",
+    "3. IP:               "};
 
 #endif

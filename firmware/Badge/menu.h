@@ -94,8 +94,6 @@ class Menu {
   bool terminalEnabledFlag;
   unsigned long startTerminalTime;
   Debug& debug = Debug::getInstance();
-  UartCommunication speaker;
-  UartCommunication vip;
   uint8_t selectedOption;
   uint8_t previousLayer;
   uint8_t currentLayer;
@@ -127,6 +125,7 @@ class Menu {
   void updateConferenceCounter();
   void fillTalksList();
   void enableTerminal();
+  void updateWiFiParams();
   // Dino Game
   void gameSetup();
   void introMessage();
@@ -140,6 +139,8 @@ class Menu {
  public:
   Menu();
   Adafruit_NeoPixel pixels;
+  UartCommunication vip;
+  UartCommunication speaker;
   void begin();
   void loop();
   bool isTerminalEnabled();

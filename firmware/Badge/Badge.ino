@@ -44,10 +44,10 @@ enum URL {
 
 int port = 80;
 WiFiServer server(port);
-String defaultSSDI;
+String defaultSSID;
 String defaultPassword;
 int status;
-URL webRequest;
+URL webRequest = INDEX_HTML;
 Debug &debug = Debug::getInstance();
 void setupWiFi();
 void loadPageContent(WiFiClient client);
@@ -57,10 +57,8 @@ void updateWebRequest(String url);
 void handleRequests();
 void handleURLParameters(String url);
 void runServer();
+String ipToString(IPAddress ip);
 #endif
-
-const char *ssid = "Badge";
-const char *password = "password";
 
 void setup() {
   menu.begin();
@@ -89,17 +87,20 @@ void setupWiFi() {
 #ifdef ESP32
   debug.println("");
   debug.println("Configuring access point...");
+  defaultSSID += menu.speaker.getSSID();
+  defaultPassword = menu.speaker.getPassword();
 
   // You can remove the password parameter if you want the AP to be open.
   // a valid password must have more than 7 characters
-  if (!WiFi.softAP(ssid, password)) {
+  if (!WiFi.softAP(defaultSSID.c_str(), defaultPassword.c_str())) {
     log_e("Soft AP creation failed.");
     while (1)
       ;
   }
   IPAddress myIP = WiFi.softAPIP();
-  debug.println("AP IP address: ");
-  // debug.println(myIP);
+  debug.print("AP IP address: ");
+  debug.println(ipToString(myIP));
+  menu.speaker.setIP(ipToString(WiFi.softAPIP()));
   server.begin();
 
   debug.println("Server started");
@@ -320,5 +321,16 @@ void handleURLParameters(String url) {
     }
     menu.pixels.show();
   }
+}
+
+String ipToString(IPAddress ip) {
+  String result = "";
+  for (int i = 0; i < 4; i++) {
+    result += String(ip[i]);
+    if (i < 3) {
+      result += ".";
+    }
+  }
+  return result;
 }
 #endif

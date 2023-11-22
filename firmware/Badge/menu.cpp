@@ -61,8 +61,8 @@ void Menu::begin() {
 #endif
 
   debug.begin(9600);
-  // debug.waitForSerialConnection();  // For testing purposes
-  debug.disable();  // Disable debug for production
+  debug.waitForSerialConnection();  // For testing purposes
+  // debug.disable();  // Disable debug for production
   debug.println("Board name: " + String(BOARD_NAME));
   speaker.setTalk(4);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
@@ -382,6 +382,11 @@ char **Menu::updateVMenuOptions() {
       options = infoMenu;
       optionsSize = sizeof(infoMenu) / sizeof(infoMenu[0]);
       break;
+    case LAYER_SERVER_MENU:
+      updateWiFiParams();
+      options = serverOptions;
+      optionsSize = sizeof(serverOptions) / sizeof(serverOptions[0]);
+      break;
     default:
       options = errorBanner;
       optionsSize = sizeof(errorBanner) / sizeof(errorBanner[0]);
@@ -552,6 +557,7 @@ void Menu::updatePreviousLayer() {
     case LAYER_CONFERENCE_MENU:
     case LAYER_TERMINAL:
     case LAYER_INFO_MENU:
+    case LAYER_SERVER_MENU:
       previousLayer = LAYER_MAIN_MENU;
       break;
     case LAYER_CONFERENCE_PAIRING_BANNER:
@@ -630,6 +636,7 @@ void Menu::mainMenu() {
       airTagsMenu();
       break;
     case MAIN_MENU_WEB_SERVER:
+      currentLayer = LAYER_SERVER_MENU;
       break;
 #endif
     default:
@@ -855,6 +862,18 @@ void Menu::enableTerminal() {
 
 void Menu::disableTerminal() {
   this->terminalEnabled = false;
+}
+
+void Menu::updateWiFiParams() {
+  char *ssid = (char *)malloc(40);
+  char *password = (char *)malloc(40);
+  char *ip = (char *)malloc(40);
+  sprintf(ssid, "SSID: %s", speaker.getSSID().c_str());
+  sprintf(password, "Password: %s", speaker.getPassword().c_str());
+  sprintf(ip, "IP: %s", speaker.getIP().c_str());
+  serverOptions[SERVER_MENU_SSID] = ssid;
+  serverOptions[SERVER_MENU_PASSWORD] = password;
+  serverOptions[SERVER_MENU_IP] = ip;
 }
 
 /**

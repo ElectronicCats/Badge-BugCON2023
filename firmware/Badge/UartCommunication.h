@@ -23,6 +23,9 @@ class UartCommunication {
   uint8_t talksCounterBuffer[1];
   uint8_t receivedTalksOrder[40];
   uint8_t receivedTalksOrderBuffer[40];
+  String ssid;
+  String password;
+  String ip;
   void updateTalkList(String talkName);
 
  public:
@@ -39,6 +42,10 @@ class UartCommunication {
   void disableCommunication();
   bool isCommunicationEnabled();
   std::vector<String> getTalkList();
+  String getSSID();
+  String getPassword();
+  String getIP();
+  void setIP(String ip);
 };
 
 #endif

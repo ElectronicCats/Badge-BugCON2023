@@ -81,6 +81,8 @@ UartCommunication::UartCommunication() {
   this->communication = false;
   this->receivedSuccess = false;
   this->talksCounter = 0;
+  this->ssid = "Badge " + getID();
+  this->password = "password";
 }
 
 void UartCommunication::begin() {
@@ -293,4 +295,20 @@ bool UartCommunication::isCommunicationEnabled() {
 
 std::vector<String> UartCommunication::getTalkList() {
   return this->talkList;
+}
+
+String UartCommunication::getSSID() {
+  return this->ssid;
+}
+
+String UartCommunication::getPassword() {
+  return this->password;
+}
+
+String UartCommunication::getIP() {
+  return this->ip;
+}
+
+void UartCommunication::setIP(String ip) {
+  this->ip = ip;
 }
