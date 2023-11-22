@@ -20,7 +20,6 @@ class UartCommunication {
   String talkName;
   bool communication;
   std::vector<String> talkList;
-  uint8_t talksCounter;
   uint8_t talksCounterBuffer[1];
   uint8_t receivedTalksOrder[40];
   uint8_t receivedTalksOrderBuffer[40];
@@ -28,6 +27,7 @@ class UartCommunication {
 
  public:
   UartCommunication();
+  uint8_t talksCounter;
   bool receivedSuccess;
   void begin();
   void ereaseFlash();

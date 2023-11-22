@@ -124,6 +124,7 @@ class Menu {
   void talksMenu();
   void conferenceHelp();
   void conferenceSuccess();
+  void updateConferenceCounter();
   void fillTalksList();
   void enableTerminal();
   // Dino Game

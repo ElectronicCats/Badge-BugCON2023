@@ -64,7 +64,7 @@ void Menu::begin() {
   // debug.waitForSerialConnection();  // For testing purposes
   debug.disable();  // Disable debug for production
   debug.println("Board name: " + String(BOARD_NAME));
-  speaker.setTalk(3);  // Value from 0 to 28, check UartCommunication.cpp
+  speaker.setTalk(4);  // Value from 0 to 28, check UartCommunication.cpp
   vip.begin();
   // vip.ereaseFlash();  // Uncomment to erease conference list
   debug.println("ID: " + String(speaker.getID()));
@@ -369,6 +369,7 @@ char **Menu::updateVMenuOptions() {
       optionsSize = sizeof(ledsOptions) / sizeof(ledsOptions[0]);
       break;
     case LAYER_CONFERENCE_MENU:
+      updateConferenceCounter();
       options = conferenceOptions;
       optionsSize = sizeof(conferenceOptions) / sizeof(conferenceOptions[0]);
       break;
@@ -770,6 +771,16 @@ void Menu::conferenceSuccess() {
     default:
       break;
   }
+}
+
+void Menu::updateConferenceCounter() {
+#ifdef RP2040
+  uint8_t counter = vip.talksCounter;
+  char *counterStr = (char *)malloc(40);
+  sprintf(counterStr, "3. Conferencias: %d", counter);
+  conferenceOptions[PAIR_MENU_CONFERENCE_COUNTER] = counterStr;
+  debug.println(String(conferenceOptions[PAIR_MENU_CONFERENCE_COUNTER]));
+#endif
 }
 
 void Menu::fillTalksList() {

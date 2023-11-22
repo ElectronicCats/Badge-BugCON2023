@@ -47,6 +47,7 @@ enum LedsMenuOptions {
 enum PairMenuOptions {
   PAIR_MENU_START = 0,
   PAIR_MENU_CONFERENCES,
+  PAIR_MENU_CONFERENCE_COUNTER,
   PAIR_MENU_HELP,
 };
 #else
@@ -108,7 +109,8 @@ char *ledsOptions[] = {
 char *conferenceOptions[] = {
     "1. Vincular",
     "2. Ver conferencias",
-    "3. Ayuda"};
+    "3. Conferencias:   ",
+    "4. Ayuda"};
 #else
 char *conferenceOptions[] = {
     "1. Vincular",
@@ -123,7 +125,7 @@ char *pairingSuccessBanner[] = {
     "  Nueva conferencia  ",
     "      agregada       "};
 
-#if defined(RP2040) || defined(ARDUINO_ARCH_MBED_RP2040)
+#if defined(RP2040)
 char *conferenceHelpBanner[] = {
     "   Debes conectarte  ",
     "     a un speaker",
