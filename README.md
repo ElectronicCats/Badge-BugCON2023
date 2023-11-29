@@ -1,16 +1,29 @@
 
 # Badge BugCON 2023
 
- 
-## Maintainer
+Badge de la resistencia BugCON 2023 #unetealaresistencia
 
-<a
-href="https://github.com/sponsors/ElectronicCats">
+## Características
 
-<img  src="https://electroniccats.com/wp-content/uploads/2020/07/Badge_GHS.png"  height="104" />
+- ESP32S3 o RP2040
+- UART
+- Bluetooth (ESP32S3)
+- WiFi (ESP32S3)
+- Baterias AA
 
+## License
+<a>
+  <img src="https://github.com/ElectronicCats/AjoloteBoard/raw/master/OpenSourceLicense.png" height="150" />
 </a>
 
-Electronic Cats invests time and resources providing this open source design, please support Electronic Cats and open-source hardware by purchasing products from Electronic Cats!
+Diseñado por Electronic Cats para BugCON 2023
 
-[Agregando el link como referencia]: <https://github.com/ElectronicCats/Template-Project-KiCAD-CI>
+Electronic Cats invests time and resources in providing this open-source design. Please support Electronic Cats and open-source hardware by purchasing products from Electronic Cats!
+
+Hardware released under an CERN Open Hardware Licence v1.2. See the LICENSE_HARDWARE file for more information.
+
+Electronic Cats and BugCON is a registered trademark. Please do not use if you sell these PCBs.
+
+Sept 2023
+
+
